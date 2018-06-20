@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { LayerManagerLeaflet, LayerManagerGmaps } from 'layer-manager';
-import isEmpty from 'lodash/isEmpty';
+import { LayerManagerLeaflet } from 'layer-manager';
 
 import {
   // Legend
@@ -8,79 +7,78 @@ import {
 
   // Toolbar
   LegendItemToolbar,
-  LegendItemButtonBBox,
-  LegendItemButtonLayers,
-  LegendItemButtonOpacity,
-  LegendItemButtonVisibility,
-  LegendItemButtonInfo,
-  LegendItemButtonRemove,
 
   // Types
-  LegendItemTypes,
-  LegendItemTypeBasic,
-  LegendItemTypeChoropleth,
-  LegendItemTypeGradient,
-  LegendItemTypeProportional
+  LegendItemTypes
 
 } from 'wri-api-components';
 
 import './App.css';
 const L = window.L;
-const google = window.google;
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      layerSpec: {}
+      layerSpec: {},
+      apiUrl: 'http://api.resourcewatch.org/v1/layer?application=rw&provider=cartodb'
     };
   }
   componentDidMount() {
     this.initMap();
-    this.layerManager = new LayerManagerLeaflet(this.map, {
-      serialize: true
-    });
-    // this.layerManager = new LayerManagerGmaps(this.map, {
-    //   serialize: true
-    // });
-    fetch('https://api.resourcewatch.org/v1/layer/0ac7bf69-388a-48b0-a869-c3240031c4bf?application=rw&provider=cartodb')
-      .then(response => response.json())
-      .then(layerSpec => {
-        this.setState({ layerSpec });
-      })
+    this.layerManager = new LayerManagerLeaflet(this.map);
+    this.getLayer(this.state.apiUrl);
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    const { layerSpec } = nextState;
-    if (!isEmpty(layerSpec)) {
-      this.layerManager.add({ data: [layerSpec.data] });
+  handleSubmit = e => {
+    e.preventDefault();
+    this.getLayer();
+  }
+
+  getLayer = () => {
+    const { apiUrl } = this.state;
+    if (apiUrl) {
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(layerSpec => {
+          this.layerManager.remove();
+          this.layerManager.add(layerSpec, {
+            opacity: 1,
+            visibility: true,
+            zIndex: 2
+          });
+        })
     }
   }
 
+  setValue = e => {
+    this.setState({ apiUrl: e.target.value });
+  }
+
   initMap = () => {
-    this.map = L.map('c-map').setView([27, 12], 3);
+    this.map = L.map('c-map', {
+      zoomControl: false
+    }).setView([27, 12], 3);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(this.map);
-    // this.map = new google.maps.Map(document.getElementById('c-map'), {
-    //   center: {lat: -34.397, lng: 150.644},
-    //   zoom: 8
-    // });
+    L.control.zoom({
+      position:'topright'
+    }).addTo(this.map);
   }
 
   render() {
-    const { layerSpec } = this.state;
     return (
       <div className="App">
         <div id="c-map"></div>
-        {layerSpec &&
-          <Legend
-            LegendItemToolbar={<LegendItemToolbar />}
-            LegendItemTypes={<LegendItemTypes />}
-            // layerGroups={[layerSpec.data]}
-          />
-        }
+        <form onSubmit={this.handleSubmit}>
+          <input type="text" className="input" value={this.state.apiUrl} onChange={this.setValue} />
+        </form>
+        <Legend
+          LegendItemToolbar={<LegendItemToolbar />}
+          LegendItemTypes={<LegendItemTypes />}
+        />
       </div>
     );
   }
