@@ -4,11 +4,12 @@
   "homepage": "https://vizzuality.github.io/layer-manager-demo",
   "private": true,
   "dependencies": {
-    "layer-manager": "^0.1.0",
+    "layer-manager": "0.1.1",
     "lodash": "^4.17.10",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-scripts": "1.1.4",
+    "react-sortable-hoc": "^0.6.8",
     "wri-api-components": "^1.0.6",
     "wri-json-api-serializer": "^1.0.1"
   },

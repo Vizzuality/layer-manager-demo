@@ -6,10 +6,17 @@ import wriAPISerializer from 'wri-json-api-serializer';
 import {
   Legend,
   LegendItemToolbar,
+  LegendItemButtonLayers,
+  LegendItemButtonOpacity,
+  LegendItemButtonVisibility,
+  LegendItemButtonInfo,
   LegendItemTypes
 } from 'wri-api-components';
 
+import '../node_modules/wri-api-components/dist/components.css';
 import './App.css';
+
+
 const L = window.L;
 
 class App extends Component {
@@ -49,6 +56,7 @@ class App extends Component {
               layers
             }
           });
+          console.log(legendSpec)
           this.setState({ legendSpec });
           this.layerManager.remove();
           if (layerSpec.data.length <= 5) {
@@ -90,9 +98,11 @@ class App extends Component {
         <div className="legend">
           {legendSpec.length > 0 &&
             <Legend
+              maxHeight={300}
+              layerGroups={legendSpec}
+              // List item
               LegendItemToolbar={<LegendItemToolbar />}
               LegendItemTypes={<LegendItemTypes />}
-              layerGroups={legendSpec}
             />
           }
         </div>
