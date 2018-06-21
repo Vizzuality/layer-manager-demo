@@ -1,7 +1,7 @@
 {
   "name": "layer-manager-demo",
   "version": "0.1.0",
-  "homepage": "http://vizzuality.github.io/layer-manager-demo",
+  "homepage": "https://vizzuality.github.io/layer-manager-demo",
   "private": true,
   "dependencies": {
     "layer-manager": "^0.1.0",

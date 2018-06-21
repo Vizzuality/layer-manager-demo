@@ -87,9 +87,6 @@ class App extends Component {
 
   render() {
     const { legendSpec } = this.state;
-    if (legendSpec) {
-      console.log(legendSpec);
-    }
     return (
       <div className="App">
         <div id="c-map"></div>
