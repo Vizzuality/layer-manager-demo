@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { LayerManagerLeaflet } from 'layer-manager';
+import groupBy from 'lodash/groupBy';
+import wriAPISerializer from 'wri-json-api-serializer';
 
 import {
   // Legend
@@ -20,8 +22,8 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      layerSpec: {},
-      apiUrl: 'http://api.resourcewatch.org/v1/layer?application=rw&provider=cartodb'
+      legendSpec: [],
+      apiUrl: 'https://api.resourcewatch.org/v1/layer?application=rw&provider=cartodb&page[size]=5'
     };
   }
   componentDidMount() {
@@ -41,12 +43,27 @@ class App extends Component {
       fetch(apiUrl)
         .then(response => response.json())
         .then(layerSpec => {
-          this.layerManager.remove();
-          this.layerManager.add(layerSpec, {
-            opacity: 1,
-            visibility: true,
-            zIndex: 2
+          const layerSpecParsed = groupBy(wriAPISerializer(layerSpec), 'dataset');
+          const legendSpec = Object.keys(layerSpecParsed).map(s => {
+            const layers = layerSpecParsed[s].map(l => ({
+              ...l,
+              active: true
+            }))
+            return {
+              dataset: s,
+              visible: true,
+              layers
+            }
           });
+          this.setState({ legendSpec });
+          this.layerManager.remove();
+          if (layerSpec.data.length <= 5) {
+            this.layerManager.add(layerSpec, {
+              opacity: 1,
+              visibility: true,
+              zIndex: 2
+            });
+          }
         })
     }
   }
@@ -69,16 +86,25 @@ class App extends Component {
   }
 
   render() {
+    const { legendSpec } = this.state;
+    if (legendSpec) {
+      console.log(legendSpec);
+    }
     return (
       <div className="App">
         <div id="c-map"></div>
         <form onSubmit={this.handleSubmit}>
           <input type="text" className="input" value={this.state.apiUrl} onChange={this.setValue} />
         </form>
-        <Legend
-          LegendItemToolbar={<LegendItemToolbar />}
-          LegendItemTypes={<LegendItemTypes />}
-        />
+        <div className="legend">
+          {legendSpec.length > 0 &&
+            <Legend
+              LegendItemToolbar={<LegendItemToolbar />}
+              LegendItemTypes={<LegendItemTypes />}
+              layerGroups={legendSpec}
+            />
+          }
+        </div>
       </div>
     );
   }
