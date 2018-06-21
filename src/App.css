@@ -26,4 +26,7 @@
 
 .legend {
     z-index: 1000000;
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
 }

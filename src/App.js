@@ -4,15 +4,9 @@ import groupBy from 'lodash/groupBy';
 import wriAPISerializer from 'wri-json-api-serializer';
 
 import {
-  // Legend
   Legend,
-
-  // Toolbar
   LegendItemToolbar,
-
-  // Types
   LegendItemTypes
-
 } from 'wri-api-components';
 
 import './App.css';
