@@ -89,7 +89,7 @@ class App extends Component {
       <div className="App">
         <div id="c-map"></div>
         <form onSubmit={this.handleSubmit}>
-          <input type="text" className="input" value={this.state.apiUrl} onChange={this.setValue} />
+          <input placeholder="Enter and RW API url..." type="text" className="input" value={this.state.apiUrl} onChange={this.setValue} />
         </form>
         <div className="legend">
           {legendSpec.length > 0 &&
