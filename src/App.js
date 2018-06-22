@@ -6,10 +6,6 @@ import wriAPISerializer from 'wri-json-api-serializer';
 import {
   Legend,
   LegendItemToolbar,
-  LegendItemButtonLayers,
-  LegendItemButtonOpacity,
-  LegendItemButtonVisibility,
-  LegendItemButtonInfo,
   LegendItemTypes
 } from 'wri-api-components';
 
@@ -24,7 +20,7 @@ class App extends Component {
     super();
     this.state = {
       legendSpec: [],
-      apiUrl: 'https://api.resourcewatch.org/v1/layer?application=rw&provider=cartodb&page[size]=5'
+      apiUrl: 'https://api.resourcewatch.org/v1/layer?application=gfw&page[size]=5&provider=cartodb'
     };
   }
   componentDidMount() {
@@ -66,6 +62,9 @@ class App extends Component {
               zIndex: 2
             });
           }
+        })
+        .catch(err => {
+          console.warm(err);
         })
     }
   }
