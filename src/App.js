@@ -20,7 +20,7 @@ class App extends Component {
     super();
     this.state = {
       legendSpec: [],
-      apiUrl: 'https://api.resourcewatch.org/v1/layer?application=gfw&page[size]=5&provider=cartodb'
+      apiUrl: ''
     };
   }
   componentDidMount() {
@@ -54,17 +54,14 @@ class App extends Component {
           });
           console.log(legendSpec)
           this.setState({ legendSpec });
-          this.layerManager.remove();
-          if (layerSpec.data.length <= 5) {
-            this.layerManager.add(layerSpec, {
-              opacity: 1,
-              visibility: true,
-              zIndex: 2
-            });
-          }
+          this.layerManager.add(layerSpec, {
+            opacity: 1,
+            visibility: true,
+            zIndex: 2
+          });
         })
         .catch(err => {
-          console.warm(err);
+          console.warn(err);
         })
     }
   }
