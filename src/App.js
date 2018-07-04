@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { LayerManagerLeaflet } from 'layer-manager';
-import groupBy from 'lodash/groupBy';
 import wriAPISerializer from 'wri-json-api-serializer';
+import flatten from 'lodash/flatten';
 
 import {
   Legend,
   LegendItemToolbar,
-  LegendItemTypes
+  LegendItemTypes,
+  Icons
 } from 'wri-api-components';
 
 import '../node_modules/wri-api-components/dist/components.css';
@@ -19,14 +20,31 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      legendSpec: [],
-      apiUrl: ''
+      layerGroups: [],
+      datasets: [],
+      apiUrl: 'https://api.resourcewatch.org/v1/dataset?application=rw&includes=metadata,vocabulary,layer&page[size]=1'
     };
   }
   componentDidMount() {
     this.initMap();
-    this.layerManager = new LayerManagerLeaflet(this.map);
+    this.layerManager = new LayerManagerLeaflet(this.map, {
+      serialize: false
+    });
     this.getLayer(this.state.apiUrl);
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if (nextState.datasets !== this.state.datasets) {
+      
+      
+
+  
+      this.layerManager.add(flatten(nextState.datasets.map(d => d.layer)), {
+        opacity: 1,
+        visibility: true,
+        serialize: false
+      });
+    }
   }
 
   handleSubmit = e => {
@@ -39,26 +57,22 @@ class App extends Component {
     if (apiUrl) {
       fetch(apiUrl)
         .then(response => response.json())
-        .then(layerSpec => {
-          const layerSpecParsed = groupBy(wriAPISerializer(layerSpec), 'dataset');
-          const legendSpec = Object.keys(layerSpecParsed).map(s => {
-            const layers = layerSpecParsed[s].map(l => ({
-              ...l,
-              active: true
-            }))
-            return {
-              dataset: s,
-              visible: true,
-              layers
-            }
-          });
-          console.log(legendSpec)
-          this.setState({ legendSpec });
-          this.layerManager.add(layerSpec, {
+        .then(response => {
+          const datasets = wriAPISerializer(response);
+          this.setState({ datasets })
+          this.setState({ layerGroups: datasets.map(d => ({
+            dataset: d.id,
             opacity: 1,
-            visibility: true,
-            zIndex: 2
-          });
+            visible: true,
+            layers:
+              d.layer &&
+              d.layer.map(l => ({
+                ...l,
+                active: true,
+                opacity: 1,
+                visible: true
+              }))
+          })) })
         })
         .catch(err => {
           console.warn(err);
@@ -84,18 +98,24 @@ class App extends Component {
   }
 
   render() {
-    const { legendSpec } = this.state;
+    const { layerGroups } = this.state;
     return (
       <div className="App">
-        <div id="c-map"></div>
+        <Icons />
+        <div id="c-map" onClick={
+          () => {
+            console.log(this.layerManager.find('e1dc5626-c1c2-4d60-a6a9-746a33fe1cb7'));
+            this.layerManager.find('e1dc5626-c1c2-4d60-a6a9-746a33fe1cb7').setOpacity(0);
+          }
+        }></div>
         <form onSubmit={this.handleSubmit}>
           <input placeholder="Enter and RW API url..." type="text" className="input" value={this.state.apiUrl} onChange={this.setValue} />
         </form>
         <div className="legend">
-          {legendSpec.length > 0 &&
+          {layerGroups.length > 0 &&
             <Legend
               maxHeight={300}
-              layerGroups={legendSpec}
+              layerGroups={layerGroups}
               // List item
               LegendItemToolbar={<LegendItemToolbar />}
               LegendItemTypes={<LegendItemTypes />}
