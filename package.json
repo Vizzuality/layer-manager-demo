@@ -7,6 +7,7 @@
     "lodash": "^4.17.10",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "react-map-gl": "^3.2.10",
     "react-scripts": "1.1.4",
     "react-sortable-hoc": "^0.6.8",
     "wri-api-components": "^1.1.0",
