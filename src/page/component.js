@@ -17,7 +17,8 @@ class App extends Component {
       onChangeOpacity,
       onChangeVisibility,
       onChangeOrder,
-      onChangeLayer
+      onChangeLayer,
+      onRemoveLayer
     } = this.props;
     return (
       <div className="App">
@@ -39,6 +40,7 @@ class App extends Component {
               onChangeVisibility={onChangeVisibility}
               onChangeOrder={onChangeOrder}
               onChangeLayer={onChangeLayer}
+              onRemoveLayer={onRemoveLayer}
             />
           }
         </div>

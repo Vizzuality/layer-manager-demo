@@ -36,9 +36,11 @@ class Container extends PureComponent {
   }
 
   updateLayers = (layers) => {
-    layers.forEach((l, i) => {
-      this.layerManager.add(l, { ...l, zIndex: i });
-    })
+    if (layers && layers.length) {
+      layers.forEach((l, i) => {
+        this.layerManager.add(l, { ...l, zIndex: i });
+      })
+    }
   }
 
   handleSubmit = e => {
@@ -71,27 +73,53 @@ class Container extends PureComponent {
     }).addTo(this.map);
   }
 
-  onChangeOpacty = (currentLayer, opacity) => {
-    
+  onChangeOpacity = (currentLayer, opacity) => {
+    const { setData, layers } = this.props;
+    setData({ layers: layers.map(l => {
+      let layer = l
+      if (l.layer === currentLayer.id) {
+        layer.opacity = opacity
+      }
+      return layer
+    })})
   }
-
-  onChangevisibility = () => {
-
+  
+  onChangeVisibility = (currentLayer, visible) => {
+    const { setData, layers } = this.props;
+    setData({ layers: layers.map(l => {
+      let layer = l
+      if (l.layer === currentLayer.id) {
+        layer.visible = visible
+      }
+      return layer
+    })})
   }
 
   onChangeOrder = (layerGroupsIds) => {
     const { setData, layers } = this.props;
-    console.log(layerGroupsIds, layers);
-    console.log(layerGroupsIds.map(id => layers.find(d => d.dataset === id)))
     setData({ layers: layerGroupsIds.map(id => layers.find(d => d.dataset === id)) })
   }
 
   onChangeLayer = currentLayer => {
+    const { setData, layers } = this.props;
+    setData({ layers: layers.map(l => {
+      let layer = l
+      if (l.dataset === currentLayer.dataset) {
+        layer.layer = currentLayer.id
+      }
+      return layer
+    })})
+  }
 
-    // const { setData, activeLayers, datasets } = this.props;
-    // const dataset = datasets.find(d => (d.layer.find(l => l.id === currentLayer)))
-    
-    // setData({ activeLayers: uniqBy([...activeLayers, currentLayer], 'id') })
+  onRemoveLayer = currentLayer => {
+    const { setData } = this.props;
+    const layers = this.props.layers.splice(0)
+    layers.forEach((l, i) => {
+      if (l.dataset === currentLayer.dataset) {
+        layers.splice(i, 1);
+      }
+    })
+    setData({ layers })
   }
 
   render() {
@@ -102,7 +130,8 @@ class Container extends PureComponent {
       onChangeOpacity: this.onChangeOpacity,
       onChangeVisibility: this.onChangeVisibility,
       onChangeOrder: this.onChangeOrder,
-      onChangeLayer: this.onChangeLayer
+      onChangeLayer: this.onChangeLayer,
+      onRemoveLayer: this.onRemoveLayer
     });
   }
 }
