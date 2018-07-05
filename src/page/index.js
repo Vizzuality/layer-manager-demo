@@ -45,6 +45,8 @@ class Container extends PureComponent {
 
   handleSubmit = e => {
     e.preventDefault();
+    const { setData } = this.props;
+    setData({ layers: [] })
     this.getDatasets();
   }
 
@@ -76,7 +78,7 @@ class Container extends PureComponent {
   onChangeOpacity = (currentLayer, opacity) => {
     const { setData, layers } = this.props;
     setData({ layers: layers.map(l => {
-      let layer = l
+      let layer = { ...l }
       if (l.layer === currentLayer.id) {
         layer.opacity = opacity
       }
@@ -87,7 +89,7 @@ class Container extends PureComponent {
   onChangeVisibility = (currentLayer, visible) => {
     const { setData, layers } = this.props;
     setData({ layers: layers.map(l => {
-      let layer = l
+      let layer = { ...l }
       if (l.layer === currentLayer.id) {
         layer.visible = visible
       }
