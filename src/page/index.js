@@ -1,8 +1,7 @@
 import { createElement, PureComponent } from 'react';
 import { connect } from 'react-redux';
-import isEqual from 'lodash/isEqual';
 
-import { LayerManagerLeaflet } from 'layer-manager';
+import LayerManager, { PluginLeaflet } from 'layer-manager';
 
 import Component from './component';
 import * as actions from './actions';
@@ -23,24 +22,20 @@ const mapStateToProps = ({ app }) => ({
 class Container extends PureComponent {
   componentDidMount() {
     this.initMap();
-    this.layerManager = new LayerManagerLeaflet(this.map, {
+    this.layerManager = new LayerManager(this.map, PluginLeaflet, {
       serialize: false
     });
     this.getDatasets();
   }
 
-  componentWillUpdate(nextProps) {
-    if (!isEqual(nextProps.activeLayers, this.props.activeLayers)) {
-      this.updateLayers(nextProps.activeLayers);
-    }
-  }
+  updateLayers = () => {
+    const { activeLayers } = this.props;
+    console.log(activeLayers);
+    this.layerManager.remove();
 
-  updateLayers = (layers) => {
-    if (layers && layers.length) {
-      layers.forEach((l, i) => {
-        this.layerManager.add(l, { ...l, zIndex: i });
-      })
-    }
+    activeLayers.forEach((l, i) => {
+      this.layerManager.add([l], { zIndex: 1000 - i });
+    });
   }
 
   handleSubmit = e => {
@@ -53,7 +48,8 @@ class Container extends PureComponent {
   getDatasets = () => {
     const { apiUrl, getDatasets } = this.props;
     if (apiUrl) {
-      getDatasets(apiUrl);
+      getDatasets(apiUrl)
+        .then(this.updateLayers);
     }
   }
 
@@ -76,6 +72,8 @@ class Container extends PureComponent {
   }
 
   onChangeOpacity = (currentLayer, opacity) => {
+    this.layerManager.setOpacity([currentLayer.id], opacity);
+
     const { setData, layers } = this.props;
     setData({ layers: layers.map(l => {
       let layer = { ...l }
@@ -87,6 +85,8 @@ class Container extends PureComponent {
   }
   
   onChangeVisibility = (currentLayer, visible) => {
+    this.layerManager.setVisibility([currentLayer.id], visible);
+
     const { setData, layers } = this.props;
     setData({ layers: layers.map(l => {
       let layer = { ...l }
@@ -99,7 +99,13 @@ class Container extends PureComponent {
 
   onChangeOrder = (layerGroupsIds) => {
     const { setData, layers } = this.props;
-    setData({ layers: layerGroupsIds.map(id => layers.find(d => d.dataset === id)) })
+    const newLayers = layerGroupsIds.map(id => layers.find(d => d.dataset === id));
+
+    newLayers.map((l, i) => {
+      this.layerManager.setZIndex([l.layer], 1000 - i);
+    })
+
+    setData({ layers: newLayers })
   }
 
   onChangeLayer = currentLayer => {
@@ -114,11 +120,14 @@ class Container extends PureComponent {
   }
 
   onRemoveLayer = currentLayer => {
+    this.layerManager.remove([currentLayer.id]);
+    
     const { setData } = this.props;
     const layers = this.props.layers.splice(0)
     layers.forEach((l, i) => {
       if (l.dataset === currentLayer.dataset) {
         layers.splice(i, 1);
+        
       }
     })
     setData({ layers })
