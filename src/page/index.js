@@ -1,5 +1,7 @@
 import { createElement, PureComponent } from 'react';
 import { connect } from 'react-redux';
+import isEqual from 'lodash/isEqual';
+import differenceBy from 'lodash/differenceBy';
 
 import LayerManager, { PluginLeaflet } from 'layer-manager';
 
@@ -28,14 +30,27 @@ class Container extends PureComponent {
     this.getDatasets();
   }
 
-  updateLayers = () => {
-    const { activeLayers } = this.props;
-    console.log(activeLayers);
-    this.layerManager.remove();
+  componentWillUpdate(nextProps) {
+    const { activeLayers } = nextProps;
+    const removedLayers = differenceBy(this.props.activeLayers, activeLayers, 'id');
+    if (removedLayers && removedLayers.length) {
+      this.removeLayers(removedLayers);
+    }
+    if (!isEqual(activeLayers, this.props.activeLayers)) {
+      this.updateLayers(activeLayers);
+    }
+  }
 
-    activeLayers.forEach((l, i) => {
-      this.layerManager.add([l], { zIndex: 1000 - i });
-    });
+  removeLayers = layers => {
+    this.layerManager.remove(layers.map(l => l.id));
+  }
+
+  updateLayers = (layers) => {
+    if (layers && layers.length) {
+      layers.forEach((l, i) => {
+        this.layerManager.add([l], { ...l, zIndex: 1000 - i });
+      });
+    }
   }
 
   handleSubmit = e => {
@@ -72,8 +87,6 @@ class Container extends PureComponent {
   }
 
   onChangeOpacity = (currentLayer, opacity) => {
-    this.layerManager.setOpacity([currentLayer.id], opacity);
-
     const { setData, layers } = this.props;
     setData({ layers: layers.map(l => {
       let layer = { ...l }
@@ -84,14 +97,12 @@ class Container extends PureComponent {
     })})
   }
   
-  onChangeVisibility = (currentLayer, visible) => {
-    this.layerManager.setVisibility([currentLayer.id], visible);
-
+  onChangeVisibility = (currentLayer, visibility) => {
     const { setData, layers } = this.props;
     setData({ layers: layers.map(l => {
       let layer = { ...l }
       if (l.layer === currentLayer.id) {
-        layer.visible = visible
+        layer.visibility = !layer.visibility;
       }
       return layer
     })})
@@ -100,11 +111,6 @@ class Container extends PureComponent {
   onChangeOrder = (layerGroupsIds) => {
     const { setData, layers } = this.props;
     const newLayers = layerGroupsIds.map(id => layers.find(d => d.dataset === id));
-
-    newLayers.map((l, i) => {
-      this.layerManager.setZIndex([l.layer], 1000 - i);
-    })
-
     setData({ layers: newLayers })
   }
 
@@ -120,14 +126,11 @@ class Container extends PureComponent {
   }
 
   onRemoveLayer = currentLayer => {
-    this.layerManager.remove([currentLayer.id]);
-    
     const { setData } = this.props;
     const layers = this.props.layers.splice(0)
     layers.forEach((l, i) => {
       if (l.dataset === currentLayer.dataset) {
         layers.splice(i, 1);
-        
       }
     })
     setData({ layers })

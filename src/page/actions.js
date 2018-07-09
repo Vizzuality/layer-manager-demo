@@ -19,7 +19,7 @@ export const getDatasets = createThunkAction(
             const layers = datasets.map(d => ({
               dataset: d.id,
               opacity: 1,
-              visible: true,
+              visibility: true,
               layer: d.layer && d.layer.length > 0 && d.layer[0].id 
             }))
             dispatch(setData({ layers }))
