@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
 
-import {
-  Legend,
-  LegendItemToolbar,
-  LegendItemTypes,
-  Icons
-} from 'wri-api-components';
+import Map from '../components/map';
+import Legend from '../components/legend';
+import Layers from '../components/layers';
+import Datasets from '../components/datasets';
+import Search from '../components/search';
 
 class App extends Component {
   render() {
     const {
+      // layers
+      layers,
       layerGroups,
+      activeLayers,
+      // form actions
       apiUrl,
-      handleSubmit,
-      handleInputChange,
+      // legend actions
       onChangeOpacity,
       onChangeVisibility,
       onChangeOrder,
@@ -22,27 +24,20 @@ class App extends Component {
     } = this.props;
     return (
       <div className="App">
-        <Icons />
-        <div id="c-map"></div>
-        <form onSubmit={handleSubmit}>
-          <input placeholder="Enter and RW API url..." type="text" className="input" value={apiUrl} onChange={handleInputChange} />
-        </form>
+        <Map mapRef={el => { this.map = el }} />
+        {this.map && <Layers map={this.map} layers={activeLayers} />}
+        <Datasets apiUrl={apiUrl} />
+        <Search />
         <div className="legend">
-          {layerGroups &&
-            <Legend
-              maxHeight={300}
-              layerGroups={layerGroups}
-              // List item
-              LegendItemToolbar={<LegendItemToolbar />}
-              LegendItemTypes={<LegendItemTypes />}
-              // Actions
-              onChangeOpacity={onChangeOpacity}
-              onChangeVisibility={onChangeVisibility}
-              onChangeOrder={onChangeOrder}
-              onChangeLayer={onChangeLayer}
-              onRemoveLayer={onRemoveLayer}
-            />
-          }
+          <Legend
+            layers={layers}
+            layerGroups={layerGroups}
+            onChangeOpacity={onChangeOpacity}
+            onChangeVisibility={onChangeVisibility}
+            onChangeOrder={onChangeOrder}
+            onChangeLayer={onChangeLayer}
+            onRemoveLayer={onRemoveLayer}
+          />
         </div>
       </div>
     );

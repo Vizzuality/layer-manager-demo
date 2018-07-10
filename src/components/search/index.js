@@ -2,16 +2,10 @@ import { createElement, PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import Component from './component';
-import { getLayerGroups, getActiveLayers } from './selectors';
+import * as actions from './actions';
+import reducers, { initialState } from './reducers';
 
 import './styles.scss';
-
-const mapStateToProps = ({ search, datasets }) => ({
-  ...search,
-  ...datasets,
-  layerGroups: getLayerGroups({ ...datasets }),
-  activeLayers: getActiveLayers({ ...datasets })
-});
 
 class Container extends PureComponent {
   handleSubmit = e => {
@@ -32,4 +26,6 @@ class Container extends PureComponent {
   }
 }
 
-export default connect(mapStateToProps, null)(Container);
+export { actions, reducers, initialState };
+
+export default connect(null, actions)(Container);
