@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 import Component from './component';
 import { getLayerGroups, getActiveLayers } from './selectors';
 
-import './styles.scss';
-
 const mapStateToProps = ({ search, datasets }) => ({
   ...search,
   ...datasets,

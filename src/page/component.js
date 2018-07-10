@@ -6,6 +6,8 @@ import Layers from '../components/layers';
 import Datasets from '../components/datasets';
 import Search from '../components/search';
 
+import './styles.css';
+
 class App extends Component {
   render() {
     const {
@@ -23,11 +25,11 @@ class App extends Component {
       onRemoveLayer
     } = this.props;
     return (
-      <div className="App">
+      <div className="l-page">
         <Map mapRef={el => { this.map = el }} />
         {this.map && <Layers map={this.map} layers={activeLayers} />}
         <Datasets apiUrl={apiUrl} />
-        <Search />
+        <Search className="search" />
         <div className="legend">
           <Legend
             layers={layers}

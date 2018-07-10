@@ -2,7 +2,9 @@ import { createElement, PureComponent } from 'react';
 
 import Component from './component';
 
+import './styles.css';
 const L = window.L;
+
 
 class MapContainer extends PureComponent {
   componentDidMount()  {

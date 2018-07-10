@@ -1,5 +1,5 @@
 import { createAction } from 'redux-actions';
-import { createThunkAction } from 'redux';
+import { createThunkAction } from '../../redux';
 import wriAPISerializer from 'wri-json-api-serializer';
 
 export const setDatasets = createAction('setDatasets');

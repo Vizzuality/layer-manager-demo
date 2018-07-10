@@ -5,21 +5,34 @@ import Component from './component';
 import * as actions from './actions';
 import reducers, { initialState } from './reducers';
 
-import './styles.scss';
+import './styles.css';
+
+const mapStateToProps = ({ search }) => ({
+  ...search
+});
 
 class Container extends PureComponent {
+  constructor(props) {
+    super(props)
+    this.state = {
+      apiUrl: props.apiUrl
+    }
+  }
+
   handleSubmit = e => {
+    const { setUrl } = this.props;
     e.preventDefault();
+    setUrl({ apiUrl: this.state.apiUrl })
   }
 
   handleInputChange = e => {
-    const { setUrl } = this.props;
-    setUrl({ apiUrl: e.target.value });
+    this.setState({ apiUrl: e.target.value });
   }
 
   render() {
     return createElement(Component, {
       ...this.props,
+      apiUrl: this.state.apiUrl,
       handleSubmit: this.handleSubmit,
       handleInputChange: this.handleInputChange
     });
@@ -28,4 +41,4 @@ class Container extends PureComponent {
 
 export { actions, reducers, initialState };
 
-export default connect(null, actions)(Container);
+export default connect(mapStateToProps, actions)(Container);
