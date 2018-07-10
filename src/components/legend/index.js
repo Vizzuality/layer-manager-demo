@@ -2,7 +2,7 @@ import { createElement, PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import Component from './component';
-import * as actions from '../datasets/actions';
+import * as actions from '../../providers/datasets/actions';
 
 class Legend extends PureComponent {
   onChangeOpacity = (currentLayer, opacity) => {

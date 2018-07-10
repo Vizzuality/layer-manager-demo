@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Map from '../components/map';
 import Legend from '../components/legend';
 import Layers from '../components/layers';
-import Datasets from '../components/datasets';
+import Datasets from '../providers/datasets';
 import Search from '../components/search';
 
 import './styles.css';
