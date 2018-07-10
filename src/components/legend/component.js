@@ -7,7 +7,7 @@ import {
   Icons
 } from 'wri-api-components';
 
-import '../../../node_modules/wri-api-components/dist/components.css';
+import './styles.css';
 
 class MapLegend extends Component {
   render() {
