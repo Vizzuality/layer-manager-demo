@@ -12,8 +12,9 @@ class DatasetsContainer extends PureComponent {
   }
 
   componentWillUpdate(nextProps) {
-    const { apiUrl, getDatasets } = nextProps;
+    const { apiUrl, getDatasets, setDatasets } = nextProps;
     if (!isEqual(apiUrl, this.props.apiUrl)) {
+      setDatasets({ datasets: [], layers: [] })
       getDatasets(apiUrl);
     }
   }

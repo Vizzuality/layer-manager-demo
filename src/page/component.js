@@ -16,13 +16,7 @@ class App extends Component {
       layerGroups,
       activeLayers,
       // form actions
-      apiUrl,
-      // legend actions
-      onChangeOpacity,
-      onChangeVisibility,
-      onChangeOrder,
-      onChangeLayer,
-      onRemoveLayer
+      apiUrl
     } = this.props;
     return (
       <div className="l-page">
@@ -34,11 +28,6 @@ class App extends Component {
           <Legend
             layers={layers}
             layerGroups={layerGroups}
-            onChangeOpacity={onChangeOpacity}
-            onChangeVisibility={onChangeVisibility}
-            onChangeOrder={onChangeOrder}
-            onChangeLayer={onChangeLayer}
-            onRemoveLayer={onRemoveLayer}
           />
         </div>
       </div>
