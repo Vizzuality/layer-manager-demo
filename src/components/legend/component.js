@@ -11,7 +11,7 @@ import '../../../node_modules/wri-api-components/dist/components.css';
 
 class MapLegend extends Component {
   render() {
-    const { layerGroups, layers } = this.props;
+    const { layerGroups } = this.props;
     return (
       <div className="c-legend">
         <Icons />
