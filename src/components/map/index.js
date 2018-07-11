@@ -1,15 +1,11 @@
 import React, { PureComponent } from 'react';
 
-import MapComponent from './component';
-import LayerManager, { PluginLeaflet } from 'layer-manager';
-
 import './styles.css';
 const L = window.L;
 
 class MapContainer extends PureComponent {
   componentDidMount()  {
     this.initMap();
-    this.initLayerManager();
     this.initBasemap();
   }
 
@@ -21,18 +17,14 @@ class MapContainer extends PureComponent {
     }).addTo(this.map);
   }
 
-  initLayerManager = () => {
-    this.layerManager = new LayerManager(this.map, PluginLeaflet, {
-      serialize: false
-    });
-  }
-
   initBasemap = () => {
     const { tileLayer, labelLayer, maxZoom, attribution } = this.props;
+    
     L.tileLayer(tileLayer, {
       maxZoom,
       attribution
     }).addTo(this.map);
+
     L.tileLayer(labelLayer, {
       maxZoom,
       attribution
@@ -42,9 +34,9 @@ class MapContainer extends PureComponent {
   render() {
     const { children } = this.props;
     return (
-      <MapComponent>
-        {React.Children.map(children, (child, i) => (child && React.cloneElement(child, { layerManager: this.layerManager, zIndex: 1000 - i, map: this.map })))}
-      </MapComponent>
+      <div id="c-map" className="c-map">
+        {this.map && children(this.map)}
+      </div>
     )
   }
 }
