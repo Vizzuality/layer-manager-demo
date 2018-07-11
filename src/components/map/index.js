@@ -1,34 +1,51 @@
-import { createElement, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 
-import Component from './component';
+import MapComponent from './component';
+import LayerManager, { PluginLeaflet } from 'layer-manager';
 
 import './styles.css';
 const L = window.L;
 
-
 class MapContainer extends PureComponent {
   componentDidMount()  {
-    const { mapRef } = this.props;
     this.initMap();
-    mapRef(this.map);
+    this.initLayerManager();
+    this.initBasemap();
   }
 
   initMap = () => {
-    const { tileLayer, maxZoom, attribution, controlPosition } = this.props;
-    this.map = L.map('c-map', this.props);
-    L.tileLayer(tileLayer, {
-      maxZoom,
-      attribution
-    }).addTo(this.map);
+    const { controlPosition, ...mapOptions } = this.props;
+    this.map = L.map('c-map', mapOptions);
     L.control.zoom({
       position: controlPosition
     }).addTo(this.map);
   }
 
-  render() {
-    return createElement(Component, {
-      ...this.props
+  initLayerManager = () => {
+    this.layerManager = new LayerManager(this.map, PluginLeaflet, {
+      serialize: false
     });
+  }
+
+  initBasemap = () => {
+    const { tileLayer, labelLayer, maxZoom, attribution } = this.props;
+    L.tileLayer(tileLayer, {
+      maxZoom,
+      attribution
+    }).addTo(this.map);
+    L.tileLayer(labelLayer, {
+      maxZoom,
+      attribution
+    }).addTo(this.map).setZIndex(1001);
+  }
+
+  render() {
+    const { children } = this.props;
+    return (
+      <MapComponent>
+        {React.Children.map(children, (child, i) => (child && React.cloneElement(child, { layerManager: this.layerManager, zIndex: 1000 - i, map: this.map })))}
+      </MapComponent>
+    )
   }
 }
 
@@ -36,7 +53,8 @@ MapContainer.defaultProps = {
     zoomControl: false,
     center: [27, 12],
     zoom: 3,
-    tileLayer: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    tileLayer: 'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',
+    labelLayer: 'http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png',
     maxZoom: 19,
     minZoom: 2,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
