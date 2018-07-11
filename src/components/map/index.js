@@ -1,16 +1,17 @@
-import { createElement, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 
-import Component from './component';
+import MapComponent from './component';
+import LayerManager, { PluginLeaflet } from 'layer-manager';
 
 import './styles.css';
 const L = window.L;
 
-
 class MapContainer extends PureComponent {
   componentDidMount()  {
-    const { mapRef } = this.props;
     this.initMap();
-    mapRef(this.map);
+    this.layerManager = new LayerManager(this.map, PluginLeaflet, {
+      serialize: false
+    });
   }
 
   initMap = () => {
@@ -26,9 +27,12 @@ class MapContainer extends PureComponent {
   }
 
   render() {
-    return createElement(Component, {
-      ...this.props
-    });
+    const { children } = this.props;
+    return (
+      <MapComponent>
+        {React.Children.map(children, (child, i) => (child && React.cloneElement(child, { layerManager: this.layerManager, zIndex: 1000 - i, map: this.map })))}
+      </MapComponent>
+    )
   }
 }
 
