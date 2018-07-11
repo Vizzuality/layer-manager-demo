@@ -1,48 +1,34 @@
 import React, { Component } from 'react';
 
-import {
-  Legend,
-  LegendItemToolbar,
-  LegendItemTypes,
-  Icons
-} from 'wri-api-components';
+import Map from '../components/map';
+import Legend from '../components/legend';
+import Layers from '../components/layers';
+import Datasets from '../providers/datasets';
+import Search from '../components/search';
+
+import './styles.css';
 
 class App extends Component {
   render() {
     const {
+      // layers
+      layers,
       layerGroups,
-      apiUrl,
-      handleSubmit,
-      handleInputChange,
-      onChangeOpacity,
-      onChangeVisibility,
-      onChangeOrder,
-      onChangeLayer,
-      onRemoveLayer
+      activeLayers,
+      // form actions
+      apiUrl
     } = this.props;
     return (
-      <div className="App">
-        <Icons />
-        <div id="c-map"></div>
-        <form onSubmit={handleSubmit}>
-          <input placeholder="Enter and RW API url..." type="text" className="input" value={apiUrl} onChange={handleInputChange} />
-        </form>
+      <div className="l-page">
+        <Map mapRef={el => { this.map = el }} />
+        {this.map && <Layers map={this.map} layers={activeLayers} />}
+        <Datasets apiUrl={apiUrl} />
+        <Search className="search" />
         <div className="legend">
-          {layerGroups &&
-            <Legend
-              maxHeight={300}
-              layerGroups={layerGroups}
-              // List item
-              LegendItemToolbar={<LegendItemToolbar />}
-              LegendItemTypes={<LegendItemTypes />}
-              // Actions
-              onChangeOpacity={onChangeOpacity}
-              onChangeVisibility={onChangeVisibility}
-              onChangeOrder={onChangeOrder}
-              onChangeLayer={onChangeLayer}
-              onRemoveLayer={onRemoveLayer}
-            />
-          }
+          <Legend
+            layers={layers}
+            layerGroups={layerGroups}
+          />
         </div>
       </div>
     );

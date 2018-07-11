@@ -2,12 +2,18 @@
 import { combineReducers } from 'redux';
 import { handleActions } from './redux';
 
-import * as App from './page/index';
+import * as Search from './components/search';
+import * as Datasets from './providers/datasets';
 
 const componentsReducers = {
-  app: handleActions(App)
+  search: handleActions(Search)
 };
 
+const providersReducers = {
+  datasets: handleActions(Datasets)
+}
+
 export default combineReducers({
-  ...componentsReducers
+  ...componentsReducers,
+  ...providersReducers
 });
