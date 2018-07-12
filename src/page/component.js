@@ -7,6 +7,7 @@ import Map from '../components/map';
 import Legend from '../components/legend';
 import Datasets from '../providers/datasets';
 import Search from '../components/search';
+import Popup from '../components/map/components/popup';
 
 import './styles.css';
 
@@ -22,11 +23,14 @@ class App extends Component {
       <div className="l-page">
         <Map>
           {(map) => (
-            <LayerManager map={map} plugin={PluginLeaflet}>
-              {activeLayers && activeLayers.map(l =>
-                <Layer key={l.id} {...l} />
-              )}
-            </LayerManager>
+            <React.Fragment>
+              <LayerManager map={map} plugin={PluginLeaflet}>
+                {activeLayers && activeLayers.map(l =>
+                  <Layer key={l.id} {...l} />
+                )}
+              </LayerManager>
+              <Popup map={map} layers={activeLayers} />
+            </React.Fragment>
           )}
         </Map>
         <Datasets apiUrl={apiUrl} />
