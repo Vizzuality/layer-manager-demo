@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 
+import { LayerManager, Layer } from 'layer-manager/dist/react';
+import { PluginLeaflet } from 'layer-manager';
+
 import Map from '../components/map';
 import Legend from '../components/legend';
-import Layer from '../components/map/components/layer';
 import Datasets from '../providers/datasets';
 import Search from '../components/search';
 
@@ -19,8 +21,12 @@ class App extends Component {
     return (
       <div className="l-page">
         <Map>
-          {activeLayers && activeLayers.map(l =>
-            <Layer key={l.id} {...l} />
+          {(map) => (
+            <LayerManager map={map} plugin={PluginLeaflet}>
+              {activeLayers && activeLayers.map(l =>
+                <Layer key={l.id} {...l} />
+              )}
+            </LayerManager>
           )}
         </Map>
         <Datasets apiUrl={apiUrl} />
