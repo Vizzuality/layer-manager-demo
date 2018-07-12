@@ -17,15 +17,7 @@ export const getLayerGroups = createSelector(
           ...layer,
           opacity: l.opacity,
           visibility: l.visibility,
-          active: l.layer === layer.id,
-          ...layer.interactionConfig.output && layer.interactionConfig.output.length && {
-            interactivity: layer.interactionConfig.output.map(i => i.column),
-            events: {
-              click: e => {
-                console.log(e);
-              }
-            }
-          }
+          active: l.layer === layer.id
         })) : []
       }
     }).filter(l => l.layers && l.layers.length > 0)
