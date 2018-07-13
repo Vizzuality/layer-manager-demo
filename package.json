@@ -4,6 +4,7 @@
   "homepage": "https://vizzuality.github.io/layer-manager-demo",
   "private": true,
   "dependencies": {
+    "d3": "^5.5.0",
     "hoist-non-react-statics": "^2.5.5",
     "layer-manager": "^0.1.2",
     "lodash": "^4.17.10",
