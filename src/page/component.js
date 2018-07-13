@@ -13,13 +13,29 @@ import { scalePow } from 'd3-scale';
 import './styles.css';
 
 class App extends Component {
+  state = {
+    startDate: 2001,
+    endDate: 2002
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      setInterval(() => {
+        const { startDate, endDate } = this.state;
+        this.setState({
+          endDate: (endDate === 2016) ? 2002 : endDate + 1
+        })
+      }, 500);
+    }, 3500);
+  }
   render() {
     const {
       layers,
       layerGroups,
       activeLayers,
       apiUrl
-    } = this.props
+    } = this.props;
+
     return (
       <div className="l-page">
         <Map>
@@ -29,12 +45,17 @@ class App extends Component {
                 <Layer
                   key={l.id}
                   {...l}
-                  decode
+                  decode={{
+                    startDate: this.state.startDate,
+                    endDate: this.state.endDate
+                  }}
                   decodeFunction={(data, w, h, z) => {
+                    const { startDate, endDate } = this.state;
+
                     const components = 4;
                     const exp = z < 11 ? 0.3 + ((z - 3) / 20) : 1;
-                    const yearStart = 2001;
-                    const yearEnd = 2016;
+                    const yearStart = startDate;
+                    const yearEnd = endDate;
                     const imgData = data;
 
                     const myscale = scalePow()
