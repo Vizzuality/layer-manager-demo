@@ -7,6 +7,7 @@ import Map from '../components/map';
 import Legend from '../components/legend';
 import Datasets from '../providers/datasets';
 import Search from '../components/search';
+import Popup from '../components/map/components/popup';
 
 import decodeFuncs from './decode.js';
 
@@ -25,23 +26,26 @@ class App extends Component {
       <div className="l-page">
         <Map>
           {(map) => (
-            <LayerManager map={map} plugin={PluginLeaflet}>
-              {activeLayers && activeLayers.map(l => {
-                const decodeLayerKeys = Object.keys(decodeFuncs);
+            <React.Fragment>
+              <LayerManager map={map} plugin={PluginLeaflet}>
+                {activeLayers && activeLayers.map(l => {
+                  const decodeLayerKeys = Object.keys(decodeFuncs);
 
-                return (
-                  <Layer
-                    key={l.id}
-                    {...l}
-                    {...!!decodeLayerKeys.indexOf(l.id) > -1 && {
-                      decode: { startDate: layers[0].startDate, endDate: layers[0].endDate },
-                      decodeFunction: decodeFuncs[l.id]
-                    }}          
-                  />
-                )
-              }
-              )}
-            </LayerManager>
+                  return (
+                    <Layer
+                      key={l.id}
+                      {...l}
+                      {...!!decodeLayerKeys.indexOf(l.id) > -1 && {
+                        decode: { startDate: layers[0].startDate, endDate: layers[0].endDate },
+                        decodeFunction: decodeFuncs[l.id]
+                      }}          
+                    />
+                  )
+                }
+                )}
+              </LayerManager>
+              <Popup map={map} layers={activeLayers} />
+            </React.Fragment>
           )}
         </Map>
         <Datasets apiUrl={apiUrl} />

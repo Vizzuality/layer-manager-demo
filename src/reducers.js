@@ -3,10 +3,12 @@ import { combineReducers } from 'redux';
 import { handleActions } from './redux';
 
 import * as Search from './components/search';
+import * as Popup from './components/map/components/popup';
 import * as Datasets from './providers/datasets';
 
 const componentsReducers = {
-  search: handleActions(Search)
+  search: handleActions(Search),
+  popup: handleActions(Popup)
 };
 
 const providersReducers = {
