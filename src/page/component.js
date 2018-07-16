@@ -8,26 +8,11 @@ import Legend from '../components/legend';
 import Datasets from '../providers/datasets';
 import Search from '../components/search';
 
-import { scalePow } from 'd3-scale';
+import decodeFuncs from './decode.js';
 
 import './styles.css';
 
 class App extends Component {
-  state = {
-    startDate: 2001,
-    endDate: 2002
-  }
-
-  componentDidMount() {
-    setTimeout(() => {
-      setInterval(() => {
-        const { startDate, endDate } = this.state;
-        this.setState({
-          endDate: (endDate === 2016) ? 2002 : endDate + 1
-        })
-      }, 500);
-    }, 3500);
-  }
   render() {
     const {
       layers,
@@ -35,54 +20,26 @@ class App extends Component {
       activeLayers,
       apiUrl
     } = this.props;
-
+    
     return (
       <div className="l-page">
         <Map>
           {(map) => (
             <LayerManager map={map} plugin={PluginLeaflet}>
-              {activeLayers && activeLayers.map(l =>
-                <Layer
-                  key={l.id}
-                  {...l}
-                  decode={{
-                    startDate: this.state.startDate,
-                    endDate: this.state.endDate
-                  }}
-                  decodeFunction={(data, w, h, z) => {
-                    const { startDate, endDate } = this.state;
+              {activeLayers && activeLayers.map(l => {
+                const decodeLayerKeys = Object.keys(decodeFuncs);
 
-                    const components = 4;
-                    const exp = z < 11 ? 0.3 + ((z - 3) / 20) : 1;
-                    const yearStart = startDate;
-                    const yearEnd = endDate;
-                    const imgData = data;
-
-                    const myscale = scalePow()
-                      .exponent(exp)
-                      .domain([0, 256])
-                      .range([0, 256]);
-
-                    for (let i = 0; i < w; ++i) {
-                      for (let j = 0; j < h; ++j) {
-                        const pixelPos = ((j * w) + i) * components;
-                        const intensity = imgData[pixelPos];
-                        const yearLoss = 2000 + (imgData[pixelPos + 2]);
-
-                        if (yearLoss >= yearStart && yearLoss < yearEnd) {
-                          imgData[pixelPos] = 220;
-                          imgData[pixelPos + 1] = (72 - z) + 102 - (3 * myscale(intensity) / z);
-                          imgData[pixelPos + 2] = (33 - z) + 153 - ((intensity) / z);
-                          imgData[pixelPos + 3] = z < 13 ? myscale(intensity) : intensity;
-                        } else {
-                          imgData[pixelPos + 3] = 0;
-                        }
-                      }
-                    }
-
-                    return imgData;
-                  }}                  
-                />
+                return (
+                  <Layer
+                    key={l.id}
+                    {...l}
+                    {...!!decodeLayerKeys.indexOf(l.id) > -1 && {
+                      decode: { startDate: layers[0].startDate, endDate: layers[0].endDate },
+                      decodeFunction: decodeFuncs[l.id]
+                    }}          
+                  />
+                )
+              }
               )}
             </LayerManager>
           )}
@@ -93,6 +50,7 @@ class App extends Component {
           <Legend
             layers={layers}
             layerGroups={layerGroups}
+            activeLayers={activeLayers}
           />
         </div>
       </div>

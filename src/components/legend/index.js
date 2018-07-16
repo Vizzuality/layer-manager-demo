@@ -55,6 +55,18 @@ class Legend extends PureComponent {
     setDatasets({ layers })
   }
 
+  onChangeTimeline = (currentLayer, startDate, endDate) => {
+    const { setDatasets, layers } = this.props;
+    setDatasets({ layers: layers.map(l => {
+      let layer = { ...l }
+      if (l.layer === currentLayer.id) {
+        layer.startDate = startDate;
+        layer.endDate = endDate;
+      }
+      return layer
+    })})
+  }
+
   render() {
     return createElement(Component, {
       ...this.props,
@@ -62,7 +74,8 @@ class Legend extends PureComponent {
       onChangeVisibility: this.onChangeVisibility,
       onChangeOrder: this.onChangeOrder,
       onChangeLayer: this.onChangeLayer,
-      onRemoveLayer: this.onRemoveLayer
+      onRemoveLayer: this.onRemoveLayer,
+      onChangeTimeline: this.onChangeTimeline
     });
   }
 }

@@ -20,7 +20,9 @@ export const getDatasets = createThunkAction(
             dataset: d.id,
             opacity: 1,
             visibility: true,
-            layer: d.layer && d.layer.length > 0 && d.layer[0].id 
+            layer: d.layer && d.layer.length > 0 && d.layer[0].id,
+            startDate: 2001,
+            endDate: 2016
           }))
           dispatch(setDatasets({ layers }))
         })

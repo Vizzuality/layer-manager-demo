@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import isEqual from 'lodash/isEqual';
 
 import {
   Legend,
@@ -10,6 +11,16 @@ import {
 import './styles.css';
 
 class MapLegend extends Component {
+  componentWillUpdate(nextProps) {
+    const { onChangeTimeline, layers, activeLayers } = nextProps;
+    const { startDate, endDate } = layers && layers.length && layers[0];
+    if (!isEqual(layers, this.props.layers)) {
+      setTimeout(() => {
+        onChangeTimeline(activeLayers[0], startDate, endDate === 2016 ? 2002 : endDate + 1)
+      }, 1000);
+    }
+  }
+
   render() {
     const { layerGroups } = this.props;
     return (
