@@ -48,7 +48,7 @@ MapContainer.defaultProps = {
     tileLayer: 'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',
     labelLayer: 'http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png',
     maxZoom: 19,
-    minZoom: 2,
+    minZoom: 3,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     controlPosition: 'topright'
 };
