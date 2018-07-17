@@ -1,0 +1,24 @@
+@import '../../../node_modules/rc-slider/assets/index.css';
+
+.c-timeline {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.range {
+  margin-left: 10px;
+}
+
+.play-btn {
+  border-color: transparent;
+  border-style: none;
+  border-width: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.play-btn:focus {
+  outline: none;
+}

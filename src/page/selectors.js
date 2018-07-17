@@ -19,6 +19,8 @@ export const getLayerGroups = createSelector(
           opacity: l.opacity,
           visibility: l.visibility,
           active: l.layer === layer.id,
+          intStartDate: 2001,
+          intEndDate: 2016,
           startDate: l.startDate,
           endDate: l.endDate,
           ...layer.interactionConfig.output && layer.interactionConfig.output.length && {

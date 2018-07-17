@@ -1,30 +1,19 @@
 import React, { Component } from 'react';
-import isEqual from 'lodash/isEqual';
+import Timeline from '../timeline';
 
 import {
   Legend,
   LegendListItem,
   LegendItemToolbar,
   LegendItemTypes,
-  LegendItemButtonVisibility,
   Icons
 } from 'wri-api-components';
 
 import './styles.css';
 
 class MapLegend extends Component {
-  componentWillUpdate(nextProps) {
-    const { onChangeTimeline, layers, activeLayers } = nextProps;
-    const { startDate, endDate } = layers && layers.length && layers[0];
-    if (!isEqual(layers, this.props.layers)) {
-      setTimeout(() => {
-        onChangeTimeline(activeLayers[0], startDate, endDate === 2016 ? 2002 : endDate + 1)
-      }, 1000);
-    }
-  }
-
   render() {
-    const { layerGroups, ...rest } = this.props;
+    const { layerGroups, onChangeTimeline, ...rest } = this.props;
     return (
       <div className="c-legend">
         <Icons />
@@ -32,18 +21,27 @@ class MapLegend extends Component {
           <Legend
             layerGroups={layerGroups}
           >
-            {layerGroups.map((lg, i) => (
-              <LegendListItem
-                index={i}
-                key={lg.id}
-                layerGroup={lg}
-                toolbar={
-                  <LegendItemToolbar {...rest} />
-                }
-              >
-                <LegendItemTypes />
-              </LegendListItem>
-            ))}
+            {layerGroups.map((lg, i) => {
+              const activeLayer = lg.layers.find(l => l.active);
+              return (
+                <LegendListItem
+                  index={i}
+                  key={lg.id}
+                  layerGroup={lg}
+                  toolbar={
+                    <LegendItemToolbar {...rest} />
+                  }
+                >
+                  <LegendItemTypes />
+                  <Timeline
+                    className="timeline"
+                    onChangeTimeline={onChangeTimeline}
+                    activeLayer={activeLayer}
+                  />
+                </LegendListItem>
+              );
+            })
+            }
           </Legend>
         }
       </div>

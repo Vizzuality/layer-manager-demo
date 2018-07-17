@@ -63,6 +63,7 @@ class Legend extends PureComponent {
         layer.startDate = startDate;
         layer.endDate = endDate;
       }
+      console.log(layer);
       return layer
     })})
   }
