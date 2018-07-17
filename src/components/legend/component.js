@@ -44,19 +44,23 @@ class MapLegend extends Component {
                     <LegendItemToolbar {...rest} />
                   }
                 >
-                  <Select
-                    className="select"
-                    value={options.find(o => o.value === activeLayer.thresh)}
-                    options={options}
-                    onChange={value => onChangeThreshold(activeLayer, value.value)}
-                  />
+                  {activeLayer && activeLayer.thresh &&
+                    <Select
+                      className="select"
+                      value={options.find(o => o.value === activeLayer.thresh)}
+                      options={options}
+                      onChange={value => onChangeThreshold(activeLayer, value.value)}
+                    />
+                  }
                   <LegendItemTypes />
-                  <Timeline
-                    className="timeline"
-                    onChangeTimeline={onChangeTimeline}
-                    activeLayer={activeLayer}
-                    tickCount={4}
-                  />
+                  {activeLayer && activeLayer.startDate && activeLayer.endDate &&
+                    <Timeline
+                      className="timeline"
+                      onChangeTimeline={onChangeTimeline}
+                      activeLayer={activeLayer}
+                      tickCount={4}
+                    />
+                  }
                 </LegendListItem>
               );
             })

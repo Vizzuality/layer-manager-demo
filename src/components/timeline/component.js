@@ -32,7 +32,7 @@ class Timeline extends Component {
     this.interval = setInterval(() => {
       const newEndDate = this.state.endDate === trimEndDate ? startDate : this.state.endDate + 1;
       this.handleChangeTimeline([startDate, newEndDate, trimEndDate], activeLayer)
-    }, 1000)
+    }, 300)
   }
 
   stopTimeline = () => {

@@ -9,8 +9,6 @@ import Datasets from '../providers/datasets';
 import Search from '../components/search';
 import Popup from '../components/map/components/popup';
 
-import decodeFuncs from './decode.js';
-
 import './styles.css';
 
 class App extends Component {
@@ -28,23 +26,12 @@ class App extends Component {
           {(map) => (
             <React.Fragment>
               <LayerManager map={map} plugin={PluginLeaflet}>
-                {activeLayers && activeLayers.map(l => {
-                  const decodeLayerKeys = Object.keys(decodeFuncs);
-
-                  return (
-                    <Layer
-                      key={l.id}
-                      {...l}
-                      {...!!decodeLayerKeys.indexOf(l.id) > -1 && {
-                        tileId: '{x}_{y}_{z}_{thresh}',
-                        tileParams: { url: l.layerConfig.body.url, thresh: l.thresh, dataMaxZoom: 12 },
-                        decodeParams: { startDate: layers[0].startDate, endDate: layers[0].endDate },
-                        decodeFunction: decodeFuncs[l.id]
-                      }}
-                    />
-                  )
-                }
-                )}
+                {activeLayers && activeLayers.map(l => (
+                  <Layer
+                    key={l.id}
+                    {...l}
+                  />
+                ))}
               </LayerManager>
               <Popup map={map} layers={activeLayers} />
             </React.Fragment>

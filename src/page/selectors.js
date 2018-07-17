@@ -1,8 +1,12 @@
 import { createSelector } from 'reselect';
 import flatMap from 'lodash/flatMap';
 
+import decodeFuncs from './decode.js';
+
 const getDatasets = state => state.datasets
 const getLayers = state => state.layers
+
+const decodeLayerKeys = Object.keys(decodeFuncs);
 
 export const getLayerGroups = createSelector(
   [getDatasets, getLayers],
@@ -10,6 +14,7 @@ export const getLayerGroups = createSelector(
     if (!datasets || !datasets.length || !layers || !layers.length) return null;
     return layers.map(l => {
       const dataset = datasets.find(d => d.id === l.dataset)
+
       return {
         ...dataset,
         opacity: l.opacity,
@@ -25,13 +30,11 @@ export const getLayerGroups = createSelector(
           endDate: l.endDate,
           trimEndDate: l.trimEndDate || l.endDate,
           thresh: l.thresh || 30,
-          ...layer.interactionConfig.output && layer.interactionConfig.output.length && {
-            interactivity: layer.interactionConfig.output.map(i => i.column),
-            events: {
-              click: e => {
-                console.log(e);
-              }
-            }
+          ...!!decodeLayerKeys.indexOf(layer.id) > -1 && {
+            tileId: '{x}_{y}_{z}_{thresh}',
+            tileParams: { url: layer.layerConfig.body.url, thresh: l.thresh, dataMaxZoom: layer.layerConfig.body.options.dataMaxZoom },
+            decodeParams: { startDate: l.startDate, endDate: l.endDate },
+            decodeFunction: decodeFuncs[layer.id]
           }
         })) : []
       }
