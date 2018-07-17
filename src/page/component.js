@@ -36,7 +36,9 @@ class App extends Component {
                       key={l.id}
                       {...l}
                       {...!!decodeLayerKeys.indexOf(l.id) > -1 && {
-                        decode: { startDate: layers[0].startDate, endDate: layers[0].endDate },
+                        tileId: '{x}_{y}_{z}_{thresh}',
+                        tileParams: { url: l.layerConfig.body.url, thresh: 30, dataMaxZoom: 12 },
+                        decodeParams: { startDate: layers[0].startDate, endDate: layers[0].endDate },
                         decodeFunction: decodeFuncs[l.id]
                       }}          
                     />
