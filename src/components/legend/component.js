@@ -3,8 +3,10 @@ import isEqual from 'lodash/isEqual';
 
 import {
   Legend,
+  LegendListItem,
   LegendItemToolbar,
   LegendItemTypes,
+  LegendItemButtonVisibility,
   Icons
 } from 'wri-api-components';
 
@@ -22,16 +24,29 @@ class MapLegend extends Component {
   }
 
   render() {
-    const { layerGroups } = this.props;
+    const { layerGroups, ...rest } = this.props;
     return (
       <div className="c-legend">
         <Icons />
-        {layerGroups &&
+        {layerGroups && !!layerGroups.length &&
           <Legend
-            {...this.props}
-          />
+            layerGroups={layerGroups}
+          >
+            {layerGroups.map((lg, i) => (
+              <LegendListItem
+                index={i}
+                key={lg.id}
+                layerGroup={lg}
+                toolbar={
+                  <LegendItemToolbar {...rest} />
+                }
+              >
+                <LegendItemTypes />
+              </LegendListItem>
+            ))}
+          </Legend>
         }
-      </div>      
+      </div>
     );
   }
 }

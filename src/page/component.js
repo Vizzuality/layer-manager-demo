@@ -21,7 +21,7 @@ class App extends Component {
       activeLayers,
       apiUrl
     } = this.props;
-    
+
     return (
       <div className="l-page">
         <Map>
@@ -38,7 +38,7 @@ class App extends Component {
                       {...!!decodeLayerKeys.indexOf(l.id) > -1 && {
                         decode: { startDate: layers[0].startDate, endDate: layers[0].endDate },
                         decodeFunction: decodeFuncs[l.id]
-                      }}          
+                      }}
                     />
                   )
                 }

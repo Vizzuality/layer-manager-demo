@@ -15,13 +15,13 @@ class Legend extends PureComponent {
       return layer
     })})
   }
-  
-  onChangeVisibility = (currentLayer) => {
+
+  onChangeVisibility = (currentLayer, visibility) => {
     const { setDatasets, layers } = this.props;
     setDatasets({ layers: layers.map(l => {
       let layer = { ...l }
       if (l.layer === currentLayer.id) {
-        layer.visibility = !layer.visibility;
+        layer.visibility = visibility;
       }
       return layer
     })})

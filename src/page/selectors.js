@@ -12,6 +12,8 @@ export const getLayerGroups = createSelector(
       const dataset = datasets.find(d => d.id === l.dataset)
       return {
         ...dataset,
+        opacity: l.opacity,
+        visibility: l.visibility,
         layers: dataset.layer && dataset.layer.length > 0 ? dataset.layer.map(layer => ({
           ...layer,
           opacity: l.opacity,
