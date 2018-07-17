@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import range from 'lodash/range';
+
 import { Range } from 'rc-slider';
 import { Icon } from 'wri-api-components';
 
@@ -9,7 +11,7 @@ class Timeline extends Component {
     super(props)
     this.state = {
       isPlaying: false,
-      startDate: props.activeLayer.startDate
+      endDate: props.activeLayer.endDate
     }
   }
 
@@ -25,10 +27,10 @@ class Timeline extends Component {
   }
 
   startTimeline = activeLayer => {
-    const { endDate, intStartDate } = activeLayer;
+    const { startDate, intEndDate } = activeLayer;
     this.interval = setInterval(() => {
-      const newStartDate = this.state.startDate === endDate ? intStartDate : this.state.startDate + 1;
-      this.handleChangeTimeline([newStartDate, endDate], activeLayer)
+      const newEndDate = this.state.endDate === intEndDate ? startDate : this.state.endDate + 1;
+      this.handleChangeTimeline([startDate, newEndDate], activeLayer)
     }, 1000)
   }
 
@@ -38,7 +40,7 @@ class Timeline extends Component {
 
   handleChangeTimeline = (range, layer) => {
     const { onChangeTimeline } = this.props;
-    this.setState({ startDate: range[0] })
+    this.setState({ endDate: range[1] })
     onChangeTimeline(layer, range[0], range[1]);
   }
 
@@ -46,10 +48,11 @@ class Timeline extends Component {
     const { className, activeLayer } = this.props;
     const { isPlaying } = this.state;
     const { intStartDate, intEndDate, startDate, endDate } = activeLayer;
-    const marks = {
-      [intStartDate]: intStartDate,
-      [intEndDate]: intEndDate
-    }
+    const ticks = range(intStartDate, intEndDate + 1, 3);
+    const marks = {};
+    ticks.forEach(r => {
+      marks[r] = r;
+    })
 
     return (
       <div className={`c-timeline ${className}`}>
@@ -67,7 +70,9 @@ class Timeline extends Component {
           min={intStartDate}
           max={intEndDate}
           marks={marks}
-          onChange={range => this.handleChangeTimeline(range, activeLayer)} />
+          onChange={range => this.handleChangeTimeline(range, activeLayer)}
+          disabled={isPlaying}
+        />
       </div>
     );
   }

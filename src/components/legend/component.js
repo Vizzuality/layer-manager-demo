@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Timeline from '../timeline';
 
 import {
   Legend,
@@ -8,6 +7,8 @@ import {
   LegendItemTypes,
   Icons
 } from 'wri-api-components';
+
+import Timeline from '../timeline';
 
 import './styles.css';
 
@@ -37,6 +38,7 @@ class MapLegend extends Component {
                     className="timeline"
                     onChangeTimeline={onChangeTimeline}
                     activeLayer={activeLayer}
+                    tickCount={4}
                   />
                 </LegendListItem>
               );
