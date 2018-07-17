@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import range from 'lodash/range';
+import debounce from 'lodash/debounce';
 
 import { Range } from 'rc-slider';
 import { Icon } from 'wri-api-components';
@@ -27,10 +28,10 @@ class Timeline extends Component {
   }
 
   startTimeline = activeLayer => {
-    const { startDate, endDate } = activeLayer;
+    const { startDate, trimEndDate } = activeLayer;
     this.interval = setInterval(() => {
-      const newEndDate = this.state.endDate === endDate ? startDate : this.state.endDate + 1;
-      this.handleChangeTimeline([startDate, newEndDate], activeLayer)
+      const newEndDate = this.state.endDate === trimEndDate ? startDate : this.state.endDate + 1;
+      this.handleChangeTimeline([startDate, newEndDate, trimEndDate], activeLayer)
     }, 1000)
   }
 
@@ -41,14 +42,14 @@ class Timeline extends Component {
   handleChangeTimeline = (range, layer) => {
     const { onChangeTimeline } = this.props;
     this.setState({ endDate: range[1] })
-    onChangeTimeline(layer, range[0], range[1]);
+    onChangeTimeline(layer, range[0], range[1], range[2]);
   }
 
   render() {
     const { className, activeLayer } = this.props;
     const { isPlaying } = this.state;
-    const { intStartDate, intEndDate, startDate, endDate } = activeLayer;
-    const ticks = range(intStartDate, intEndDate + 1, 3);
+    const { intStartDate, intEndDate, startDate, endDate, trimEndDate } = activeLayer;
+    const ticks = range(intStartDate, intEndDate + 1, 5);
     const marks = {};
     ticks.forEach(r => {
       marks[r] = r;
@@ -65,12 +66,18 @@ class Timeline extends Component {
           <Icon name={isPlaying ? 'icon-pause' : 'icon-play'} />
         </button>
         <Range
+          count={2}
+          trackStyle={[{ backgroundColor: 'green' }, { backgroundColor: 'light grey' }]}
+          handleStyle={[{ backgroundColor: 'grey' }, { display: 'none', zIndex: 1 }, { backgroundColor: 'grey', zIndex: 2 }]}
+          railStyle={{ backgroundColor: 'grey' }}
+          dotStyle={{ display: 'none', border: '0px' }}
           className="range"
-          value={[startDate, endDate]}
+          value={[startDate, endDate, trimEndDate]}
           min={intStartDate}
           max={intEndDate}
           marks={marks}
-          onChange={range => this.handleChangeTimeline(range, activeLayer)}
+          pushable
+          onChange={debounce(range => this.handleChangeTimeline(range, activeLayer), 150)}
           disabled={isPlaying}
         />
       </div>
