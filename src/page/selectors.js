@@ -23,6 +23,7 @@ export const getLayerGroups = createSelector(
           intEndDate: 2016,
           startDate: l.startDate,
           endDate: l.endDate,
+          thresh: l.thresh || 30,
           ...layer.interactionConfig.output && layer.interactionConfig.output.length && {
             interactivity: layer.interactionConfig.output.map(i => i.column),
             events: {

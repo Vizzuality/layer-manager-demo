@@ -27,9 +27,9 @@ class Timeline extends Component {
   }
 
   startTimeline = activeLayer => {
-    const { startDate, intEndDate } = activeLayer;
+    const { startDate, endDate } = activeLayer;
     this.interval = setInterval(() => {
-      const newEndDate = this.state.endDate === intEndDate ? startDate : this.state.endDate + 1;
+      const newEndDate = this.state.endDate === endDate ? startDate : this.state.endDate + 1;
       this.handleChangeTimeline([startDate, newEndDate], activeLayer)
     }, 1000)
   }

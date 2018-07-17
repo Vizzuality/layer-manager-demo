@@ -63,7 +63,17 @@ class Legend extends PureComponent {
         layer.startDate = startDate;
         layer.endDate = endDate;
       }
-      console.log(layer);
+      return layer
+    })})
+  }
+
+  onChangeThreshold = (currentLayer, thresh) => {
+    const { setDatasets, layers } = this.props;
+    setDatasets({ layers: layers.map(l => {
+      let layer = { ...l }
+      if (l.layer === currentLayer.id) {
+        layer.thresh = thresh;
+      }
       return layer
     })})
   }
@@ -76,7 +86,8 @@ class Legend extends PureComponent {
       onChangeOrder: this.onChangeOrder,
       onChangeLayer: this.onChangeLayer,
       onRemoveLayer: this.onRemoveLayer,
-      onChangeTimeline: this.onChangeTimeline
+      onChangeTimeline: this.onChangeTimeline,
+      onChangeThreshold: this.onChangeThreshold
     });
   }
 }
