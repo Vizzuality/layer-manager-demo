@@ -2,12 +2,12 @@ import { createElement, PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import Component from './component';
-import * as actions from '../../providers/datasets/actions';
+import * as actions from '../../page/actions';
 
 class Legend extends PureComponent {
   onChangeOpacity = (currentLayer, opacity) => {
-    const { setDatasets, layers } = this.props;
-    setDatasets({ layers: layers.map(l => {
+    const { setLayers, layers } = this.props;
+    setLayers({ layers: layers.map(l => {
       let layer = { ...l }
       if (l.layer === currentLayer.id) {
         layer.opacity = opacity
@@ -17,8 +17,8 @@ class Legend extends PureComponent {
   }
 
   onChangeVisibility = (currentLayer, visibility) => {
-    const { setDatasets, layers } = this.props;
-    setDatasets({ layers: layers.map(l => {
+    const { setLayers, layers } = this.props;
+    setLayers({ layers: layers.map(l => {
       let layer = { ...l }
       if (l.layer === currentLayer.id) {
         layer.visibility = visibility;
@@ -28,14 +28,14 @@ class Legend extends PureComponent {
   }
 
   onChangeOrder = (layerGroupsIds) => {
-    const { setDatasets, layers } = this.props;
+    const { setLayers, layers } = this.props;
     const newLayers = layerGroupsIds.map(id => layers.find(d => d.dataset === id));
-    setDatasets({ layers: newLayers })
+    setLayers({ layers: newLayers })
   }
 
   onChangeLayer = currentLayer => {
-    const { setDatasets, layers } = this.props;
-    setDatasets({ layers: layers.map(l => {
+    const { setLayers, layers } = this.props;
+    setLayers({ layers: layers.map(l => {
       let layer = l
       if (l.dataset === currentLayer.dataset) {
         layer.layer = currentLayer.id
@@ -45,32 +45,32 @@ class Legend extends PureComponent {
   }
 
   onRemoveLayer = currentLayer => {
-    const { setDatasets } = this.props;
+    const { setLayers } = this.props;
     const layers = this.props.layers.splice(0)
     layers.forEach((l, i) => {
       if (l.dataset === currentLayer.dataset) {
         layers.splice(i, 1);
       }
     })
-    setDatasets({ layers })
+    setLayers({ layers })
   }
 
-  onChangeTimeline = (currentLayer, startDate, endDate, trimEndDate) => {
-    const { setDatasets, layers } = this.props;
-    setDatasets({ layers: layers.map(l => {
+  onChangeTimeline = (currentLayer, range) => {
+    const { setLayers, layers } = this.props;
+    setLayers({ layers: layers.map(l => {
       let layer = { ...l }
       if (l.layer === currentLayer.id) {
-        layer.startDate = startDate;
-        layer.endDate = endDate;
-        layer.trimEndDate = trimEndDate;
+        layer.startDate = range[0];
+        layer.endDate = range[1];
+        layer.trimEndDate = range[2];
       }
       return layer
     })})
   }
 
   onChangeThreshold = (currentLayer, thresh) => {
-    const { setDatasets, layers } = this.props;
-    setDatasets({ layers: layers.map(l => {
+    const { setLayers, layers } = this.props;
+    setLayers({ layers: layers.map(l => {
       let layer = { ...l }
       if (l.layer === currentLayer.id) {
         layer.thresh = thresh;

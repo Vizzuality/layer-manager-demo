@@ -19,7 +19,7 @@ class App extends Component {
       activeLayers,
       apiUrl
     } = this.props;
-
+    console.log(activeLayers);
     return (
       <div className="l-page">
         <Map>
@@ -33,7 +33,7 @@ class App extends Component {
                   />
                 ))}
               </LayerManager>
-              <Popup map={map} layers={activeLayers} />
+              {activeLayers && <Popup map={map} layers={activeLayers} />}
             </React.Fragment>
           )}
         </Map>

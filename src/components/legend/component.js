@@ -35,6 +35,7 @@ class MapLegend extends Component {
           >
             {layerGroups.map((lg, i) => {
               const activeLayer = lg.layers.find(l => l.active);
+              const { minDate, maxDate, startDate, endDate, trimEndDate } = activeLayer;
               return (
                 <LegendListItem
                   index={i}
@@ -44,7 +45,7 @@ class MapLegend extends Component {
                     <LegendItemToolbar {...rest} />
                   }
                 >
-                  {activeLayer && activeLayer.thresh &&
+                  {activeLayer && activeLayer.tileParams && activeLayer.tileParams.thresh &&
                     <Select
                       className="select"
                       value={options.find(o => o.value === activeLayer.thresh)}
@@ -53,12 +54,13 @@ class MapLegend extends Component {
                     />
                   }
                   <LegendItemTypes />
-                  {activeLayer && activeLayer.startDate && activeLayer.endDate &&
+                  {activeLayer && activeLayer.decodeParams && activeLayer.decodeParams.startDate && activeLayer.decodeParams.endDate &&
                     <Timeline
                       className="timeline"
-                      onChangeTimeline={onChangeTimeline}
-                      activeLayer={activeLayer}
-                      tickCount={4}
+                      onChange={range => onChangeTimeline(activeLayer, range)}
+                      min={minDate}
+                      max={maxDate}
+                      value={[startDate, endDate, trimEndDate]}
                     />
                   }
                 </LegendListItem>

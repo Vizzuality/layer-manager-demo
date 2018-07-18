@@ -1,14 +1,12 @@
 export const initialState = {
-    datasets: [],
-    layers: []
+    datasets: []
   };
-  
+
   const setDatasets = (state, { payload }) => ({
     ...state,
     ...payload
   });
-  
+
   export default {
     setDatasets
   };
-  
