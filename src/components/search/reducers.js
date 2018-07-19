@@ -1,5 +1,5 @@
 export const initialState = {
-  apiUrl: 'https://api.resourcewatch.org/v1/dataset/3f3da1e2-0891-4fed-9460-a53c01ba211a?includes=layer&page[size]=1'
+  apiUrl: 'https://api.resourcewatch.org/v1/dataset/83f8365b-f40b-4b91-87d6-829425093da1?includes=layer&page[size]=1'
   };
 
   const setUrl = (state, { payload }) => ({

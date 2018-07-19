@@ -14,6 +14,10 @@ import decodeFuncs from './decode.js';
 import './styles.css';
 
 class App extends Component {
+  state = {
+    iso: 'BRA'
+  }
+
   render() {
     const {
       layers,
@@ -23,7 +27,7 @@ class App extends Component {
     } = this.props;
     
     return (
-      <div className="l-page">
+      <div className="l-page" onClick={() => { this.setState({ iso: (this.state.iso === 'BRA') ? 'COL' : 'BRA' })}}>
         <Map>
           {(map) => (
             <React.Fragment>
@@ -35,9 +39,13 @@ class App extends Component {
                     <Layer
                       key={l.id}
                       {...l}
-                      {...!!decodeLayerKeys.indexOf(l.id) > -1 && {
-                        tileId: '{x}_{y}_{z}_{thresh}',
-                        tileParams: { url: l.layerConfig.body.url, thresh: 30, dataMaxZoom: 12 },
+                      sqlParams={{
+                        where: {
+                          iso: this.state.iso
+                        }
+                      }}
+                      {...decodeLayerKeys.indexOf(l.id) > -1 && {
+                        params: { url: l.layerConfig.body.url, thresh: 30, dataMaxZoom: 12 },
                         decodeParams: { startDate: layers[0].startDate, endDate: layers[0].endDate },
                         decodeFunction: decodeFuncs[l.id]
                       }}          
