@@ -60,9 +60,10 @@ class Legend extends PureComponent {
     setLayers({ layers: layers.map(l => {
       let layer = { ...l }
       if (l.layer === currentLayer.id) {
-        layer.startDate = range[0];
-        layer.endDate = range[1];
-        layer.trimEndDate = range[2];
+        layer.decodeParams = {};
+        layer.decodeParams.startDate = range[0];
+        layer.decodeParams.endDate = range[1];
+        layer.decodeParams.trimEndDate = range[2];
       }
       return layer
     })})

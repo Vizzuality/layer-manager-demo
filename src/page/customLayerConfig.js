@@ -1,7 +1,7 @@
 import { scalePow } from 'd3-scale';
 
 export default {
-  'c3bf6eb4-4d36-441a-8935-67a15d618397': (data, w, h, z, params) => {
+  'c3075c5a-5567-4b09-bc0d-96ed1673f8b6': (data, w, h, z, params) => {
       const components = 4;
       const exp = z < 11 ? 0.3 + ((z - 3) / 20) : 1;
       const yearStart = params.startDate;

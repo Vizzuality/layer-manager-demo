@@ -35,7 +35,10 @@ class MapLegend extends Component {
           >
             {layerGroups.map((lg, i) => {
               const activeLayer = lg.layers.find(l => l.active);
-              const { minDate, maxDate, startDate, endDate, trimEndDate } = activeLayer;
+              const { layerConfig, decodeParams } = activeLayer;
+              const { startDate, endDate, trimEndDate } = decodeParams;
+              const minDate = layerConfig && layerConfig.decode_config && layerConfig.decode_config.find(d => d.key === 'startDate').default;
+              const maxDate = layerConfig && layerConfig.decode_config && layerConfig.decode_config.find(d => d.key === 'endDate').default;
               return (
                 <LegendListItem
                   index={i}
@@ -58,9 +61,11 @@ class MapLegend extends Component {
                     <Timeline
                       className="timeline"
                       onChange={range => onChangeTimeline(activeLayer, range)}
-                      min={minDate}
-                      max={maxDate}
-                      value={[startDate, endDate, trimEndDate]}
+                      min={minDate || startDate}
+                      max={maxDate || endDate}
+                      startDate={startDate}
+                      endDate={endDate}
+                      trimEndDate={trimEndDate || endDate}
                     />
                   }
                 </LegendListItem>

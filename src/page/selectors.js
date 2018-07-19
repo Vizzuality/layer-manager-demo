@@ -21,27 +21,40 @@ export const getLayerGroups = createSelector(
           const decodeFunction = layerConfig[layer.id];
           const paramsConfig = layer.layerConfig.params_config;
           const decodeConfig = layer.layerConfig.decode_config;
+          const sqlConfig = layer.layerConfig.sql_config;
 
           return {
-            ...l,
             ...layer,
+            ...l,
             active: l.layer === layer.id,
-            ...!!paramsConfig && {
-              tileParams: {
+            ...!!paramsConfig && !!paramsConfig.length && {
+              params: {
                 url: layer.layerConfig.body.url || layer.layerConfig.url,
                 ...paramsConfig.reduce((obj, param) => {
-                  obj[param.key] = l[param.key] || param.default;
+                  obj[param.key] = param.default;
                   return obj;
-                }, {})
+                }, {}),
+                ...l.params
               }
             },
-            ...!!decodeConfig && {
+            ...!!sqlConfig && !!sqlConfig.length && {
+              sqlParams: {
+                ...sqlConfig.reduce((obj, param) => {
+                  obj[param.key] = param.default;
+                  return obj;
+                }, {}),
+                ...l.decodeParams
+              },
+              ...l.sqlParams
+            },
+            ...!!decodeConfig && !!decodeConfig.length && {
               decodeFunction,
               decodeParams: {
                 ...decodeConfig.reduce((obj, param) => {
-                  obj[param.key] = l[param.key] || param.default;
+                  obj[param.key] = param.default;
                   return obj;
-                }, {})
+                }, {}),
+                ...l.decodeParams
               }
             },
             // ...!!decodeConfig && {

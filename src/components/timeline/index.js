@@ -9,7 +9,7 @@ class TimelineContainer extends PureComponent {
     super(props)
     this.state = {
       isPlaying: false,
-      endDate: props.value[1]
+      endDate: props.endDate
     }
   }
 
@@ -24,7 +24,7 @@ class TimelineContainer extends PureComponent {
   }
 
   startTimeline = () => {
-    const { value: [startDate, endDate, trimEndDate], interval } = this.props;
+    const { startDate, trimEndDate, interval } = this.props;
     this.interval = setInterval(() => {
       const newEndDate = this.state.endDate === trimEndDate ? startDate : this.state.endDate + 1;
       this.handleOnChange([startDate, newEndDate, trimEndDate])

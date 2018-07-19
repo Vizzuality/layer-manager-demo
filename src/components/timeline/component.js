@@ -15,6 +15,9 @@ class Timeline extends Component {
       min,
       max,
       handleOnChange,
+      startDate,
+      endDate,
+      trimEndDate,
       ...props
     } = this.props;
 
@@ -39,6 +42,7 @@ class Timeline extends Component {
           disabled={isPlaying}
           min={min}
           max={max}
+          value={[startDate, endDate, trimEndDate]}
           {...props}
           onChange={handleOnChange}
         />
