@@ -35,7 +35,7 @@ class MapLegend extends Component {
           >
             {layerGroups.map((lg, i) => {
               const activeLayer = lg.layers.find(l => l.active);
-              const { layerConfig, decodeParams } = activeLayer;
+              const { layerConfig, decodeParams, legendConfig } = activeLayer;
               const { startDate, endDate, trimEndDate } = decodeParams;
               const minDate = layerConfig && layerConfig.decode_config && layerConfig.decode_config.find(d => d.key === 'startDate').default;
               const maxDate = layerConfig && layerConfig.decode_config && layerConfig.decode_config.find(d => d.key === 'endDate').default;
@@ -48,10 +48,10 @@ class MapLegend extends Component {
                     <LegendItemToolbar {...rest} />
                   }
                 >
-                  {activeLayer && activeLayer.tileParams && activeLayer.tileParams.thresh &&
+                  {activeLayer && activeLayer.params && activeLayer.params.thresh &&
                     <Select
                       className="select"
-                      value={options.find(o => o.value === activeLayer.thresh)}
+                      value={options.find(o => o.value === activeLayer.params.thresh)}
                       options={options}
                       onChange={value => onChangeThreshold(activeLayer, value.value)}
                     />
@@ -66,6 +66,7 @@ class MapLegend extends Component {
                       startDate={startDate}
                       endDate={endDate}
                       trimEndDate={trimEndDate || endDate}
+                      trackStyle={[{ backgroundColor: legendConfig.items[0].color }, { backgroundColor: 'light grey' }]}
                     />
                   }
                 </LegendListItem>
