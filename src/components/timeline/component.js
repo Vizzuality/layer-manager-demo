@@ -18,6 +18,7 @@ class Timeline extends Component {
       startDate,
       endDate,
       trimEndDate,
+      color,
       ...props
     } = this.props;
 
