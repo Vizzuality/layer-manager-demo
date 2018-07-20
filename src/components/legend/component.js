@@ -35,10 +35,7 @@ class MapLegend extends Component {
           >
             {layerGroups.map((lg, i) => {
               const activeLayer = lg.layers.find(l => l.active);
-              const { layerConfig, decodeParams, legendConfig } = activeLayer;
-              const { startDate, endDate, trimEndDate } = decodeParams;
-              const minDate = layerConfig && layerConfig.decode_config && layerConfig.decode_config.find(d => d.key === 'startDate').default;
-              const maxDate = layerConfig && layerConfig.decode_config && layerConfig.decode_config.find(d => d.key === 'endDate').default;
+              const { decodeParams, legendConfig } = activeLayer;
               return (
                 <LegendListItem
                   index={i}
@@ -57,16 +54,12 @@ class MapLegend extends Component {
                     />
                   }
                   <LegendItemTypes />
-                  {activeLayer && activeLayer.decodeParams && activeLayer.decodeParams.startDate && activeLayer.decodeParams.endDate &&
+                  {decodeParams && decodeParams.startDate &&
                     <Timeline
                       className="timeline"
-                      onChange={range => onChangeTimeline(activeLayer, range)}
-                      min={minDate || startDate}
-                      max={maxDate || endDate}
-                      startDate={startDate}
-                      endDate={endDate}
-                      trimEndDate={trimEndDate || endDate}
-                      trackStyle={[{ backgroundColor: legendConfig.items[0].color }, { backgroundColor: 'light grey' }]}
+                      handleChange={range => onChangeTimeline(activeLayer, range)}
+                      {...decodeParams}
+                      trackStyle={[{ backgroundColor: legendConfig && legendConfig.items[0].color }, { backgroundColor: 'light grey' }]}
                     />
                   }
                 </LegendListItem>

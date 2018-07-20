@@ -19,7 +19,7 @@ class App extends Component {
       activeLayers,
       apiUrl
     } = this.props;
-    console.log(activeLayers);
+
     return (
       <div className="l-page">
         <Map>

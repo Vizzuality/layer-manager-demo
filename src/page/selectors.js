@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect';
 import flatMap from 'lodash/flatMap';
+import moment from 'moment';
 
 import layerConfig from './customLayerConfig';
 
@@ -47,29 +48,27 @@ export const getLayerGroups = createSelector(
               },
               ...l.sqlParams
             },
+            decodeFunction,
+            ...!!decodeFunction && {
+              decodeParams: {}
+            },
             ...!!decodeConfig && !!decodeConfig.length && {
-              decodeFunction,
               decodeParams: {
                 ...decodeConfig.reduce((obj, param) => {
-                  obj[param.key] = param.default;
+                  const { key } = param;
+                  obj[key] = param.default || moment().format('YYYY-MM-DD');
+                  if (key === 'startDate') {
+                    obj.minDate = param.default
+                  }
+                  if (key === 'endDate') {
+                    obj.maxDate = param.default || moment().format('YYYY-MM-DD')
+                    obj.trimEndDate = param.default || moment().format('YYYY-MM-DD')
+                  }
                   return obj;
                 }, {}),
                 ...l.decodeParams
               }
-            },
-            // ...!!decodeConfig && {
-            //   decodeFunction,
-            //   decodeParams: {
-            //     startDate: l.startDate || decode.decodeParams.startDate,
-            //     endDate: l.endDate || decode.decodeParams.endDate
-            //   },
-            //   startDate: l.startDate || decode.decodeParams.startDate,
-            //   endDate: l.endDate || decode.decodeParams.endDate,
-            //   minDate: decode.decodeParams.startDate,
-            //   maxDate: decode.decodeParams.endDate,
-            //   trimEndDate: l.trimEndDate || l.endDate || decode.decodeParams.endDate,
-            //   thresh: l.thresh || layer.layerConfig.body.options.threshold
-            // }
+            }
           }
         }) : []
       }

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import range from 'lodash/range';
 
 import { Range } from 'rc-slider';
 import { Icon } from 'wri-api-components';
@@ -14,20 +13,19 @@ class Timeline extends Component {
       handleTogglePlay,
       min,
       max,
+      start,
+      end,
+      trim,
       handleOnChange,
+      handleOnAfterChange,
       startDate,
       endDate,
       trimEndDate,
       color,
+      formatDate,
+      ticks,
       ...props
     } = this.props;
-
-    // Create ticks for x axis
-    const ticks = range(min, max + 1, 5);
-    const marks = {};
-    ticks.forEach(r => {
-      marks[r] = r;
-    })
 
     return (
       <div className={`c-timeline ${className}`}>
@@ -39,26 +37,19 @@ class Timeline extends Component {
         </button>
         <Range
           className="range"
-          marks={marks}
+          // marks={marks}
           disabled={isPlaying}
           min={min}
           max={max}
-          value={[startDate, endDate, trimEndDate]}
+          value={[start, end, trim]}
+          pushable
           {...props}
           onChange={handleOnChange}
+          onAfterChange={handleOnAfterChange}
         />
       </div>
     );
   }
 }
-
-Timeline.defaultProps = {
-  count: 2,
-  trackStyle: [{ backgroundColor: 'green' }, { backgroundColor: 'light grey' }],
-  handleStyle: [{ backgroundColor: 'grey' }, { display: 'none', zIndex: 1 }, { backgroundColor: 'grey', zIndex: 2 }],
-  railStyle: { backgroundColor: 'grey' },
-  dotStyle: { display: 'none', border: '0px' },
-  pushable: true
-};
 
 export default Timeline;
