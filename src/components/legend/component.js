@@ -36,6 +36,7 @@ class MapLegend extends Component {
             {layerGroups.map((lg, i) => {
               const activeLayer = lg.layers.find(l => l.active);
               const { decodeParams, legendConfig } = activeLayer;
+
               return (
                 <LegendListItem
                   index={i}
@@ -59,7 +60,7 @@ class MapLegend extends Component {
                       className="timeline"
                       handleChange={range => onChangeTimeline(activeLayer, range)}
                       {...decodeParams}
-                      trackStyle={[{ backgroundColor: legendConfig && legendConfig.items[0].color }, { backgroundColor: 'light grey' }]}
+                      trackStyle={[{ backgroundColor: legendConfig && legendConfig.items && legendConfig.items[0].color }, { backgroundColor: 'light grey' }]}
                     />
                   }
                 </LegendListItem>

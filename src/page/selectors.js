@@ -48,12 +48,10 @@ export const getLayerGroups = createSelector(
               },
               ...l.sqlParams
             },
-            decodeFunction,
-            ...!!decodeFunction && {
-              decodeParams: {}
-            },
-            ...!!decodeConfig && !!decodeConfig.length && {
+            ...decodeFunction,
+            ...!!decodeConfig && !!decodeConfig.length && !!decodeFunction && {
               decodeParams: {
+                ...decodeFunction.decodeParams,
                 ...decodeConfig.reduce((obj, param) => {
                   const { key } = param;
                   obj[key] = param.default || moment().format('YYYY-MM-DD');

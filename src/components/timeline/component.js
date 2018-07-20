@@ -42,7 +42,6 @@ class Timeline extends Component {
           min={min}
           max={max}
           value={[start, end, trim]}
-          pushable
           {...props}
           onChange={handleOnChange}
           onAfterChange={handleOnAfterChange}
