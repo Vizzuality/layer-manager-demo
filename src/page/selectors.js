@@ -2,7 +2,7 @@ import { createSelector } from 'reselect';
 import flatMap from 'lodash/flatMap';
 import moment from 'moment';
 
-import layerConfig from './customLayerConfig';
+import decodeLayersConfig from './decodeConfig';
 
 const getDatasets = state => state.datasets
 const getLayers = state => state.layers
@@ -19,7 +19,7 @@ export const getLayerGroups = createSelector(
         ...dataset,
         ...l,
         layers: dataset.layer && dataset.layer.length > 0 ? dataset.layer.map(layer => {
-          const decodeFunction = layerConfig[layer.id];
+          const decodeFunction = decodeLayersConfig[layer.id];
           const paramsConfig = layer.layerConfig.params_config;
           const decodeConfig = layer.layerConfig.decode_config;
           const sqlConfig = layer.layerConfig.sql_config;
