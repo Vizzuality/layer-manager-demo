@@ -1,1 +1,12 @@
 @import '../../../node_modules/wri-api-components/dist/components.css';
+
+.timeline {
+  padding: 20px 0;
+  width: 105%;
+  margin-left: -20px;
+}
+
+.select {
+  padding: 20px 0 10px;
+  z-index: 100;
+}

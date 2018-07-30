@@ -18,18 +18,22 @@ class App extends Component {
       layerGroups,
       activeLayers,
       apiUrl
-    } = this.props
+    } = this.props;
+
     return (
       <div className="l-page">
         <Map>
           {(map) => (
             <React.Fragment>
               <LayerManager map={map} plugin={PluginLeaflet}>
-                {activeLayers && activeLayers.map(l =>
-                  <Layer key={l.id} {...l} />
-                )}
+                {activeLayers && activeLayers.map(l => (
+                  <Layer
+                    key={l.id}
+                    {...l}
+                  />
+                ))}
               </LayerManager>
-              <Popup map={map} layers={activeLayers} />
+              {activeLayers && <Popup map={map} layers={activeLayers} />}
             </React.Fragment>
           )}
         </Map>
@@ -39,6 +43,7 @@ class App extends Component {
           <Legend
             layers={layers}
             layerGroups={layerGroups}
+            activeLayers={activeLayers}
           />
         </div>
       </div>

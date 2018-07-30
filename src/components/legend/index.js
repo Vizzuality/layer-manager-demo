@@ -2,12 +2,12 @@ import { createElement, PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import Component from './component';
-import * as actions from '../../providers/datasets/actions';
+import * as actions from '../../page/actions';
 
 class Legend extends PureComponent {
   onChangeOpacity = (currentLayer, opacity) => {
-    const { setDatasets, layers } = this.props;
-    setDatasets({ layers: layers.map(l => {
+    const { setLayers, layers } = this.props;
+    setLayers({ layers: layers.map(l => {
       let layer = { ...l }
       if (l.layer === currentLayer.id) {
         layer.opacity = opacity
@@ -15,27 +15,27 @@ class Legend extends PureComponent {
       return layer
     })})
   }
-  
-  onChangeVisibility = (currentLayer) => {
-    const { setDatasets, layers } = this.props;
-    setDatasets({ layers: layers.map(l => {
+
+  onChangeVisibility = (currentLayer, visibility) => {
+    const { setLayers, layers } = this.props;
+    setLayers({ layers: layers.map(l => {
       let layer = { ...l }
       if (l.layer === currentLayer.id) {
-        layer.visibility = !layer.visibility;
+        layer.visibility = visibility;
       }
       return layer
     })})
   }
 
   onChangeOrder = (layerGroupsIds) => {
-    const { setDatasets, layers } = this.props;
+    const { setLayers, layers } = this.props;
     const newLayers = layerGroupsIds.map(id => layers.find(d => d.dataset === id));
-    setDatasets({ layers: newLayers })
+    setLayers({ layers: newLayers })
   }
 
   onChangeLayer = currentLayer => {
-    const { setDatasets, layers } = this.props;
-    setDatasets({ layers: layers.map(l => {
+    const { setLayers, layers } = this.props;
+    setLayers({ layers: layers.map(l => {
       let layer = l
       if (l.dataset === currentLayer.dataset) {
         layer.layer = currentLayer.id
@@ -45,14 +45,44 @@ class Legend extends PureComponent {
   }
 
   onRemoveLayer = currentLayer => {
-    const { setDatasets } = this.props;
+    const { setLayers } = this.props;
     const layers = this.props.layers.splice(0)
     layers.forEach((l, i) => {
       if (l.dataset === currentLayer.dataset) {
         layers.splice(i, 1);
       }
     })
-    setDatasets({ layers })
+    setLayers({ layers })
+  }
+
+  onChangeTimeline = (currentLayer, range) => {
+    const { setLayers, layers } = this.props;
+    setLayers({ layers: layers.map(l => {
+      let layer = { ...l }
+      if (l.layer === currentLayer.id) {
+        layer.decodeParams = {
+          ...layer.decodeParams
+        };
+        layer.decodeParams.startDate = range[0];
+        layer.decodeParams.endDate = range[1];
+        layer.decodeParams.trimEndDate = range[2];
+      }
+      return layer
+    })})
+  }
+
+  onChangeThreshold = (currentLayer, thresh) => {
+    const { setLayers, layers } = this.props;
+    setLayers({ layers: layers.map(l => {
+      let layer = { ...l }
+      if (l.layer === currentLayer.id) {
+        layer.params = {
+          ...layer.params
+        }
+        layer.params.thresh = thresh;
+      }
+      return layer
+    })})
   }
 
   render() {
@@ -62,7 +92,9 @@ class Legend extends PureComponent {
       onChangeVisibility: this.onChangeVisibility,
       onChangeOrder: this.onChangeOrder,
       onChangeLayer: this.onChangeLayer,
-      onRemoveLayer: this.onRemoveLayer
+      onRemoveLayer: this.onRemoveLayer,
+      onChangeTimeline: this.onChangeTimeline,
+      onChangeThreshold: this.onChangeThreshold
     });
   }
 }

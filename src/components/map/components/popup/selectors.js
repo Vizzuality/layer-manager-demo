@@ -7,6 +7,7 @@ const getLayers = state => state.layers
 export const getSelectedLayer = createSelector(
   [getSelected, getLayers, getInteractions],
   (selected, layers, interactions) => {
+    if (!layers) return null;
     if (selected && interactions[selected]) return selected;
     const interactionLayers = Object.keys(interactions);
     const topActiveLayer = layers.find(l => interactionLayers.indexOf(l.layer) > -1);
