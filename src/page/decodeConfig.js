@@ -115,6 +115,7 @@ export default {
       const confidenceValue = -1;
       const pixelComponents = 4; // RGBA
       let pixelPos = 0;
+
       for (let i = 0; i < w; ++i) {
         for (let j = 0; j < h; ++j) {
           pixelPos = (j * w + i) * pixelComponents;
@@ -132,7 +133,8 @@ export default {
           if (
             confidence >= confidenceValue &&
             day > 0 &&
-            (day >= startDay || (0 && day <= endDay))
+            day >= startDay &&
+            day <= endDay
           ) {
             // get intensity
             let intensity = (band3 % 100) * 50;
