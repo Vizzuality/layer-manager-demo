@@ -13,7 +13,7 @@ const mapStateToProps = (state, { maxDate, minDate, startDate, endDate, trimEndD
     maxDate, minDate, startDate, endDate, trimEndDate
   };
   return {
-    ticks: getTicks({ dates }),
+    marks: getTicks({ dates }),
     ...props
   }
 };

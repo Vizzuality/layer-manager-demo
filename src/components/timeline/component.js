@@ -23,7 +23,7 @@ class Timeline extends Component {
       trimEndDate,
       color,
       formatDate,
-      ticks,
+      marks,
       ...props
     } = this.props;
 
@@ -37,7 +37,7 @@ class Timeline extends Component {
         </button>
         <Range
           className="range"
-          // marks={marks}
+          marks={marks}
           disabled={isPlaying}
           min={min}
           max={max}

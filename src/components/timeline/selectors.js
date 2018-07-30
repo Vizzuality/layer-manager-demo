@@ -23,14 +23,15 @@ export const getTicks = createSelector(
   getDates,
   dates => {
     if (!dates) return null;
-    // const { minDate, maxDate } = dates;
-    // console.log(minDate, maxDate);
-    // const ticks = range(minDate, maxDate + 1, 3);
-    // const marks = {};
-    // ticks.forEach(r => {
-    //   marks[r] = r;
-    // })
-    // return marks;
+    const { minDate, maxDate } = dates;
+    const numOfYears = moment(maxDate).diff(minDate, 'years');
+    const maxDays = moment(maxDate).diff(minDate, 'days')
+    const ticks = range(0, maxDays + 1, maxDays / (numOfYears > 5 ? 5 : numOfYears));
+    const marks = {};
+    ticks.forEach((r, i) => {
+      marks[r] = !i || i === ticks.length - 1 ? moment(minDate).add(r, 'days').format('YYYY') : moment(minDate).add(r, 'days').format('YY');
+    })
+    return marks;
   }
 );
 
