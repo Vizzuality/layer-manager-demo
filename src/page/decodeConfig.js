@@ -57,7 +57,7 @@ export default {
     decodeParams: {}
   },
   // Tree cover loss
-  '5efc8b59-f4d8-411a-b9ea-422b1a368b4d': {
+  'c3075c5a-5567-4b09-bc0d-96ed1673f8b6': {
     decodeFunction: (data, w, h, z, params = { startDate: '2001-01-01', endDate: '2017-12-01' }) => {
       const components = 4;
       const exp = z < 11 ? 0.3 + ((z - 3) / 20) : 1;
