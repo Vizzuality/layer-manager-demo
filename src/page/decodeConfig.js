@@ -1,5 +1,11 @@
 import { scalePow } from 'd3-scale';
-import moment from 'moment';
+// import moment from 'moment';
+
+function dateDiff(firstDate, secondDate) {
+  // Take the difference between the dates and divide by milliseconds per day.
+  // Round to nearest whole number to deal with DST.
+  return Math.round((secondDate - firstDate) / (1000 * 60 * 60 * 24));
+}
 
 export default {
   // Tree cover 2010
@@ -98,15 +104,23 @@ export default {
   },
   // GLADs
   'dd5df87f-39c2-4aeb-a462-3ef969b20b66': {
-    decodeFunction: (data, w, h, z, params = { minDate: '2015-01-01', startDate: '2016-12-01' }) => {
+    decodeFunction: function(data, w, h, z, params = { minDate: '2015-01-01', startDate: '2016-12-01' }) {
       // fixed variables
       const imgData = data;
       const { startDate, endDate, minDate, maxDate, weeks } = params;
-      const numberOfDays = moment(maxDate).diff(minDate, 'days');
+
+      // const numberOfDays = moment(maxDate).diff(minDate, 'days');
+      const minDateTime = new Date(minDate).getTime();
+      const maxDateTime = new Date(maxDate).getTime();
+      const numberOfDays = dateDiff(minDateTime, maxDateTime);
 
       // timeline or hover effect active range
-      const activeStartDay = numberOfDays - moment(maxDate).diff(startDate, 'days');
-      const activeEndDay = numberOfDays - moment(maxDate).diff(endDate, 'days');
+      // const activeStartDay = numberOfDays - moment(maxDate).diff(startDate, 'days');
+      // const activeEndDay = numberOfDays - moment(maxDate).diff(endDate, 'days');
+      const startDateTime = new Date(startDate).getTime();
+      const endDateTime = new Date(endDate).getTime();
+      const activeStartDay = numberOfDays - dateDiff(startDateTime, maxDateTime);
+      const activeEndDay = numberOfDays - dateDiff(endDateTime, maxDateTime);
 
       // show specified weeks from end date
       const rangeStartDate = weeks && numberOfDays - 7 * weeks;
@@ -162,9 +176,10 @@ export default {
       }
     },
     decodeParams: {
-      interval: 'months',
+      interval: 'weeks',
       intervalStep: 1,
-      dateFormat: 'YYYY-MM-DD'
+      dateFormat: 'YYYY-MM-DD',
+      speed: 50
     }
   }
 }

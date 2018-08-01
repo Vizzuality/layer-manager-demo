@@ -1,4 +1,4 @@
-const datasetID = '897ecc76-2308-4c51-aeb3-495de0bdca79';
+const datasetID = 'e663eb09-04de-4f39-b871-35c6c2ed10b5';
 
 export const initialState = {
   apiUrl: `https://api.resourcewatch.org/v1/dataset/${datasetID}?includes=layer&application=gfw&hash=4243312312231`
